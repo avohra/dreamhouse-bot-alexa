@@ -87,6 +87,8 @@ let findPriceChanges = () => {
             if (err) {
                 reject("An error as occurred");
             } else {
+                console.log("Response");
+                console.log(resp.records);
                 resolve(resp.records);
             }
         });
