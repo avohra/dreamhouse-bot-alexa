@@ -79,7 +79,7 @@ let findPriceChanges = () => {
                     Parent.avohra__beds__c,
                     Parent.avohra__baths__c,
                     Parent.avohra__picture__c
-                FROM property__history
+                FROM avohra__property__history
                 WHERE field = 'avohra__Price__c'
                 ORDER BY CreatedDate DESC
                 LIMIT 3`;
