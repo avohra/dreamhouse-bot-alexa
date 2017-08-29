@@ -32,7 +32,7 @@ exports.AnswerNumber = (slots, session, response) => {
                 if (properties && properties.length>0) {
                     let text = `OK, here is what I found for ${session.attributes.bedrooms} bedrooms in ${session.attributes.city} around $${price}: `;
                     properties.forEach(property => {
-                        text += `${property.get("Address__c")}, ${property.get("City__c")}: $${property.get("Price__c")}. <break time="0.5s" /> `;
+                        text += `${property.get("avohra__Address__c")}, ${property.get("avohra__City__c")}: $${property.get("avohra__Price__c")}. <break time="0.5s" /> `;
                     });
                     response.say(text);
                 } else {
@@ -54,7 +54,7 @@ exports.Changes = (slots, session, response) => {
             let text = "OK, here are the recent price changes: ";
             priceChanges.forEach(priceChange => {
                     let property = priceChange.get("Parent");
-                    text += `${property.Address__c}, ${property.City__c}.<break time="0.2s"/>
+                    text += `${property.avohra__Address__c}, ${property.avohra__City__c}.<break time="0.2s"/>
                             Price changed from $${priceChange.get("OldValue")} to $${priceChange.get("NewValue")}.<break time="0.5s"/>`;
             });
            response.say(text);
