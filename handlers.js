@@ -13,7 +13,9 @@ exports.AnswerCity = (slots, session, response) => {
         session.attributes.stage = "ask_bedrooms";
         response.ask("How many bedrooms?");
     } else {
-        response.say("Sorry, I didn't understand that");
+        console.log("Still got here");
+        console.log(session.attributes.stage);
+        response.say("Sorry, I didn't understand that"); 
     }
 };
 
