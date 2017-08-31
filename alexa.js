@@ -35,7 +35,7 @@ module.exports = (req, res) => {
 
     };
 
-    console.debug("Intent:", intent)
+    console.log("Intent:", intent)
 
     return {
 
