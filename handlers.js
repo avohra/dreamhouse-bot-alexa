@@ -2,7 +2,6 @@
 
 let salesforce = require("./salesforce");
 
-////////// Find Top Deals ////////////
 exports.FindTopDeals = (slots, session, response) => {
     session.attributes.stage = "ask_region";
     response.ask("For what region? You can say all");
@@ -45,66 +44,6 @@ exports.AnswerSort = (slots, session, response) => {
     }
 };
 
-////////// Count Deals ////////////
-exports.CountDeals = (slots, session, response) => {
-    session.attributes.stage = "ask_bottom";
-    response.ask("Would you like to include only opportunities above a certain amount? You can say all");
-};
-
-exports.AnswerBottom = (slots, session, response) => {
-    if (session.attributes.stage === "ask_bottom") {
-        let bottom = slots.Bottom.value;
-        session.attributes.bottom = bottom;
-        session.attributes.stage = "ask_sort";
-        salesforce.countDeals({bottom: bottom })
-            .then(properties => {
-                if (properties && properties.length>0) {
-                    let text = `OK, I found `,
-                        result = properties[0];
-                    console.log(result);
-                    text += ` opportunties over ${bottom} `;
-                    response.say(text);
-                } else {
-                    response.say(`Sorry, I didn't find any open deals`);
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-                response.say("Oops. Something went wrong");
-            });
-    } else {
-        console.log(session.attributes.stage);
-        response.say("Sorry, I don't understand why you gave me a bottom limit"); 
-    }
-};
-
-exports.AnswerSort = (slots, session, response) => {
-    if (session.attributes.stage === "ask_sort") {
-        let sort = slots.Sort.value;
-        session.attributes.sort = sort;
-        salesforce.findTopDeals({region: session.attributes.region, sort: sort })
-            .then(properties => {
-                if (properties && properties.length>0) {
-                    let text = `OK, here are your top 3 deals for ${session.attributes.region}: `;
-                    properties.forEach(property => {
-                        console.log(property)
-                        text += `${property.get("account").Name.replace("&", "&amp;")} for ${property.get("amount")} assigned to ${property.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
-                    });
-                    response.say(text);
-                } else {
-                    response.say(`Sorry, I didn't find any open deals`);
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-                response.say("Oops. Something went wrong");
-            });
-    } else {
-        response.say("Sorry, I didn't understand that");
-    }
-};
-
-////////// Dream House ////////////
 exports.SearchHouses = (slots, session, response) => {
     session.attributes.stage = "ask_city";
     response.ask("OK, in what city?");

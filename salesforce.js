@@ -71,38 +71,6 @@ let findTopDeals = (params) => {
 
 };
 
-let countDeals = (params) => {
-    console.log("Count deals over " + params.bottom);
-    let where = "";
-    if (params) {
-        let parts = [];
-        if (params.bottom && params.bottom != '' && params.bottom != 'all') {
-            parts.push(`amount>='${params.bottom}'`);
-        }
-        parts.push('isclosed = false');
-        // TODO specify current quarter
-        if (parts.length>0) {
-            where = "WHERE " + parts.join(' AND ');
-        }
-    }
-    return new Promise((resolve, reject) => {
-        let q = `SELECT COUNT(id),
-                    SUM(amount),
-                    COUNT_DISTINCT(opportunity.owner.name)
-                FROM opportunity
-                ${where};
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-
-};
-
 let findProperties = (params) => {
     let where = "";
     if (params) {
@@ -202,4 +170,3 @@ exports.findProperties = findProperties;
 exports.findPriceChanges = findPriceChanges;
 exports.createCase = createCase;
 exports.findTopDeals = findTopDeals;
-exports.countDeals = countDeals;
