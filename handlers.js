@@ -108,3 +108,10 @@ exports.Changes = (slots, session, response) => {
             response.say("Oops. Something went wrong");
         });
 };
+
+exports.FindOpportunities = (slots, session, response) => {
+    response.direct([{
+        "type": "Dialog.ElicitSlot",
+        "slotToElicit": "OppRegion"
+    }]);
+}

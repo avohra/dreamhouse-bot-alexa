@@ -1,4 +1,3 @@
-"use strict";
 
 module.exports = (req, res) => {
 
@@ -35,6 +34,17 @@ module.exports = (req, res) => {
 
     };
 
+    let direct = (directives, shouldEndSession) => {
+        res.json({
+            version: req.version,
+            sessionAttributes: session.attributes,
+            response: {
+                shouldEndSession: shouldEndSession,
+                directives: directives
+            }
+        });
+    }
+
     console.log("Intent:", intent)
 
     return {
@@ -49,7 +59,8 @@ module.exports = (req, res) => {
 
         response: {
             say: text => say(text, true),
-            ask: text => say(text, false)
+            ask: text => say(text, false),
+            direct: directives => direct(directives, false)
         }
 
     };
