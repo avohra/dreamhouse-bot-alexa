@@ -111,7 +111,6 @@ exports.Changes = (slots, session, response) => {
 
 exports.FindOpportunities = (slots, session, response) => {
     response.direct([{
-        "type": "Dialog.ElicitSlot",
-        "slotToElicit": "OppRegion"
+        "type": "Dialog.Delegate"
     }]);
 }
