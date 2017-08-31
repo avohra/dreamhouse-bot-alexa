@@ -16,14 +16,15 @@ app.post('/dreamhouse', (req, res) => {
         intent = alx.intent,
         slots = alx.slots,
         session = alx.session,
-        response = alx.response;
+        response = alx.response,
+        dialogState = alx.dialogState;
 
     if (type === 'LaunchRequest') {
         response.say("Welcome to Dreamhouse");
     } else if (type === 'IntentRequest') {
         let handler = handlers[intent];
         if (handler) {
-            handler(slots, session, response);
+            handler(slots, session, response, dialogState);
         } else {
             response.say("I don't know how to answer that");
         }

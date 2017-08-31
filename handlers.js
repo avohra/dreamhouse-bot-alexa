@@ -109,8 +109,43 @@ exports.Changes = (slots, session, response) => {
         });
 };
 
-exports.FindOpportunities = (slots, session, response) => {
-    response.direct([{
-        "type": "Dialog.Delegate"
-    }]);
+exports.FindOpportunities = (slots, session, response, dialogState) => {
+    if (dialogState == 'COMPLETED')  {
+        console.log(slots);
+        response.say("Oops. Something went wrong");
+        // salesforce.findTopDeals({region: session.attributes.region, sort: sort })
+        //     .then(properties => {
+        //         if (properties && properties.length>0) {
+        //             let text = `OK, here are your top 3 deals for ${session.attributes.region}: `;
+        //             properties.forEach(property => {
+        //                 console.log(property)
+        //                 text += `${property.get("account").Name.replace("&", "&amp;")} for ${property.get("amount")} assigned to ${property.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
+        //             });
+        //             response.say(text);
+        //         } else {
+        //             response.say(`Sorry, I didn't find any open deals`);
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.error(err);
+        //         response.say("Oops. Something went wrong");
+        //     });      
+    }
+    else
+        response.direct([{
+            "type": "Dialog.Delegate"
+        }]);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
