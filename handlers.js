@@ -28,7 +28,7 @@ exports.AnswerSort = (slots, session, response) => {
                     let text = `OK, here are your top 3 deals for ${session.attributes.region}: `;
                     properties.forEach(property => {
                         console.log(property)
-                        text += `${property.get("account.Name")} for ${property.get("amount")} assigned to ${property.get("owner.Name")}. <break time="0.5s" /> `;
+                        text += `${property.get("account").Name} for ${property.get("amount")} assigned to ${property.get("owner").Name}. <break time="0.5s" /> `;
                     });
                     response.say(text);
                 } else {
