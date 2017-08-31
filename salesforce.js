@@ -29,6 +29,8 @@ let login = () => {
 let findTopDeals = (params) => {
     console.log("Finding top deals for " + params.region + " ordered by " + params.sort);
     let where = "";
+    let sort = " ORDER BY ",
+        parmSort = null;
     if (params) {
         let parts = [];
         if (params.region && params.region != '' && params.region != 'all') {
@@ -39,14 +41,15 @@ let findTopDeals = (params) => {
         if (parts.length>0) {
             where = "WHERE " + parts.join(' AND ');
         }
+        
+        parmSort = params.sort
     }
-    let sort = "ORDER BY ",
-        parmSort = params.sort;
     if (parmSort && (parmSort.indexOf('probability') > -1 || parmSort.indexOf('close'))) {
         sort += 'probability DESC';
     } else {
         sort += 'amount DESC';
     }
+    sort += ' NULLS LAST';
     return new Promise((resolve, reject) => {
         let q = `SELECT id,
                     opportunity.account.name,
@@ -56,6 +59,39 @@ let findTopDeals = (params) => {
                 ${where}
                 ${sort}
                 LIMIT 3`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+
+};
+
+let countDeals = (params) => {
+    console.log("Count deals over " + params.bottom);
+    let where = "";
+    if (params) {
+        let parts = [];
+        if (params.bottom && params.bottom != '' && params.bottom != 'all') {
+            parts.push(`amount>='${params.bottom}'`);
+        }
+        parts.push('isclosed = false');
+        // TODO specify current quarter
+        if (parts.length>0) {
+            where = "WHERE " + parts.join(' AND ');
+        }
+    }
+    return new Promise((resolve, reject) => {
+        let q = `SELECT COUNT(id),
+                    SUM(amount),
+                    COUNT_DISTINCT(opportunity.owner.name)
+                FROM opportunity
+                ${where};
+        console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
                 reject(err);
@@ -166,3 +202,4 @@ exports.findProperties = findProperties;
 exports.findPriceChanges = findPriceChanges;
 exports.createCase = createCase;
 exports.findTopDeals = findTopDeals;
+exports.countDeals = countDeals;
