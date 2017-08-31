@@ -58,6 +58,8 @@ module.exports = (req, res) => {
 
         session: session,
 
+        dialogState: req.body.request.dialogState,
+
         response: {
             say: text => say(text, true),
             ask: text => say(text, false),
