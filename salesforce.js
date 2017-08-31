@@ -26,6 +26,47 @@ let login = () => {
     });
 };
 
+let findTopDeals = (params) => {
+    console.log("Finding top deals for " + params.region + " ordered by " + params.sort);
+    let where = "";
+    if (params) {
+        let parts = [];
+        if (params.region && params.region != '' && params.region != 'all') {
+            parts.push(`opportunity.account.site='${params.region}'`);
+        }
+        parts.push('isclosed = false');
+        // TODO specify current quarter
+        if (parts.length>0) {
+            where = "WHERE " + parts.join(' AND ');
+        }
+    }
+    let sort = "ORDER BY ",
+        parmSort = params.sort;
+    if (parmSort && (parmSort.indexOf('probability') > -1 || parmSort.indexOf('close'))) {
+        sort += 'opportunity.probability DESC';
+    } else {
+        sort += 'opportunity.amount DESC';
+    }
+    return new Promise((resolve, reject) => {
+        let q = `SELECT id,
+                    opportunity.account.name,
+                    amount,
+                    opportunity.owner.name
+                FROM opportunity
+                ${where}
+                ${sort}
+                LIMIT 3`;
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+
+};
+
 let findProperties = (params) => {
     let where = "";
     if (params) {

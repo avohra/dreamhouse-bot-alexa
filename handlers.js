@@ -2,6 +2,49 @@
 
 let salesforce = require("./salesforce");
 
+exports.FindTopDeals = (slots, session, response) => {
+    session.attributes.stage = "ask_region";
+    response.ask("For what region? You can say all");
+};
+
+exports.AnswerRegion = (slots, session, response) => {
+    if (session.attributes.stage === "ask_region") {
+        session.attributes.region = slots.Region.value;
+        session.attributes.stage = "ask_sort";
+        response.ask("How would you like them sorted (by amount or probability to close)?");
+    } else {
+        console.log(session.attributes.stage);
+        response.say("Sorry, I don't understand why you gave me a region"); 
+    }
+};
+
+exports.AnswerSort = (slots, session, response) => {
+    if (session.attributes.stage === "ask_sort") {
+        let sort = slots.Sort.value;
+        session.attributes.sort = sort;
+        let priceMin = price * 0.8;
+        let priceMax = price * 1.2;
+        salesforce.findTopDeals({region: session.attributes.region, sort: sort })
+            .then(properties => {
+                if (properties && properties.length>0) {
+                    let text = `OK, here are your top 3 deals for ${session.attributes.region}: `;
+                    properties.forEach(property => {
+                        text += `${property.get("account.name")}, ${property.get("amount")}: $${property.get("owner.name")}. <break time="0.5s" /> `;
+                    });
+                    response.say(text);
+                } else {
+                    response.say(`Sorry, I didn't find any open deals`);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                response.say("Oops. Something went wrong");
+            });
+    } else {
+        response.say("Sorry, I didn't understand that");
+    }
+};
+
 exports.SearchHouses = (slots, session, response) => {
     session.attributes.stage = "ask_city";
     response.ask("OK, in what city?");
