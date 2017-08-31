@@ -116,7 +116,6 @@ exports.FindOpportunities = (slots, session, response, dialogState) => {
                 if (properties && properties.length>0) {
                     let text = `OK, here are your top 3 deals for ${slots.OppRegion.value}: `;
                     properties.forEach(property => {
-                        console.log(property)
                         text += `${property.get("account").Name.replace("&", "&amp;")} for ${property.get("amount")} assigned to ${property.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
                     });
                     response.say(text);
