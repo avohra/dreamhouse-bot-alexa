@@ -32,7 +32,7 @@ let findTopDeals = (params) => {
     if (params) {
         let parts = [];
         if (params.region && params.region != '' && params.region != 'all') {
-            parts.push(`opportunity.account.site='${params.region}'`);
+            parts.push(`account.site='${params.region}'`);
         }
         parts.push('isclosed = false');
         // TODO specify current quarter
@@ -43,9 +43,9 @@ let findTopDeals = (params) => {
     let sort = "ORDER BY ",
         parmSort = params.sort;
     if (parmSort && (parmSort.indexOf('probability') > -1 || parmSort.indexOf('close'))) {
-        sort += 'opportunity.probability DESC';
+        sort += 'probability DESC';
     } else {
-        sort += 'opportunity.amount DESC';
+        sort += 'amount DESC';
     }
     return new Promise((resolve, reject) => {
         let q = `SELECT id,
