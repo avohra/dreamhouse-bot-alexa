@@ -6,7 +6,6 @@ module.exports = (req, res) => {
         slots;
     session.attributes = session.attributes || {};
 
-    console.log(req.body);
     if (req.body.request.intent) {
         intent = req.body.request.intent.name;
         slots = req.body.request.intent.slots;
