@@ -110,6 +110,7 @@ exports.Changes = (slots, session, response) => {
 };
 
 exports.FindOpportunities = (slots, session, response, dialogState) => {
+    console.log(dialogState)
     if (dialogState == 'COMPLETED')  {
         console.log(slots);
         response.say("Oops. Something went wrong");

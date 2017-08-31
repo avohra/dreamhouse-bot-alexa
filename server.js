@@ -22,6 +22,7 @@ app.post('/dreamhouse', (req, res) => {
     if (type === 'LaunchRequest') {
         response.say("Welcome to Dreamhouse");
     } else if (type === 'IntentRequest') {
+        console.log("Passing dialog state as ", dialogState);
         let handler = handlers[intent];
         if (handler) {
             handler(slots, session, response, dialogState);
