@@ -35,6 +35,8 @@ module.exports = (req, res) => {
 
     };
 
+    console.debug("Intent:", intent)
+
     return {
 
         type: req.body.request.type,
