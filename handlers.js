@@ -22,8 +22,6 @@ exports.AnswerSort = (slots, session, response) => {
     if (session.attributes.stage === "ask_sort") {
         let sort = slots.Sort.value;
         session.attributes.sort = sort;
-        let priceMin = price * 0.8;
-        let priceMax = price * 1.2;
         salesforce.findTopDeals({region: session.attributes.region, sort: sort })
             .then(properties => {
                 if (properties && properties.length>0) {

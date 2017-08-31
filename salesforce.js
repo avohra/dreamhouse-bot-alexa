@@ -165,3 +165,4 @@ exports.org = org;
 exports.findProperties = findProperties;
 exports.findPriceChanges = findPriceChanges;
 exports.createCase = createCase;
+exports.findTopDeals = findTopDeals;
