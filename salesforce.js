@@ -76,7 +76,7 @@ let countOpportunities = (params) => {
     let where = "";
     if (params) {
         let parts = [];
-        if (params.bottom && params.bottom != '' && params.bottom != 'all') {
+        if (params.bottom && params.bottom != '' && !isNan(params.bottom)) {
             parts.push(`amount>=${params.bottom}`);
         }
         parts.push('isclosed = false');
