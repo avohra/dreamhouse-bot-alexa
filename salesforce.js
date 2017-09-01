@@ -77,7 +77,7 @@ let countOpportunities = (params) => {
     if (params) {
         let parts = [];
         if (params.bottom && params.bottom != '' && params.bottom != 'all') {
-            parts.push(`amount>='${params.bottom}'`);
+            parts.push(`amount>='${parseFloat(params.bottom)}'`);
         }
         parts.push('isclosed = false');
         // TODO specify current quarter
