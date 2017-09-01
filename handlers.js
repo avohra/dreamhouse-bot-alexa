@@ -41,7 +41,7 @@ exports.FindTopDeals = (slots, session, response, dialogState) => {
             .then(opps => {
                 if (opps && opps.length>0) {
                     let text = `OK, here are your top 3 deals for ${slots.OppRegion.value}: `;
-                    text = verbalizeOpportunites(opps)
+                    text += verbalizeOpportunites(opps)
                     response.say(text);
                 } else {
                     response.say(`Sorry, I didn't find any open deals`);
