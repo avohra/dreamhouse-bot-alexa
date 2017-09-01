@@ -17,8 +17,8 @@ exports.CountDeals = (slots, session, response, dialogState) => {
              if (opps && opps.length>0) {
                  let text = `OK, I found `,
                      result = opps[0];
-                 console.log(result);
-                 text = ` opportunties over ${bottom} `;
+                 console.log(result.get('expr0'));
+                 text = `There are ${result.get('expr0')} opportunties over $${slots.Bottom.value} totaling ${result.get('expr1')} assigned to ${result.get('expr2')} reps.`;
                  response.say(text);
              } else {
                  response.say(`Sorry, I didn't find any open deals`);
