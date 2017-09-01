@@ -26,8 +26,8 @@ let login = () => {
     });
 };
 
-let findTopDeals = (params) => {
-    console.log("Finding top deals for " + params.region + " ordered by " + params.sort);
+let findOpportunities = (params) => {
+    console.log("Finding opportunities for " + params.region + " ordered by " + params.sort);
     let where = "";
     let sort = " ORDER BY ",
         parmSort = null;
