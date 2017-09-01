@@ -5,7 +5,7 @@ let salesforce = require("./salesforce");
 var verbalizeOpportunites = (opps) => { 
    var text = "";
     opps.forEach(opp => {
-        text = `${opp.get("account").Name.replace("&", "&amp;")} for $${opp.get("amount")} assigned to ${opp.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
+        text += `${opp.get("account").Name.replace("&", "&amp;")} for $${opp.get("amount")} assigned to ${opp.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
     });
     return text;
 }
