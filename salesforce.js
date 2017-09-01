@@ -71,32 +71,27 @@ let findOpportunities = (params) => {
 
 };
 
-let findProperties = (params) => {
+let countOpportunities = (params) => {
+    console.log("Count deals over " + params.bottom);
     let where = "";
     if (params) {
         let parts = [];
-        if (params.id) parts.push(`id='${params.id}'`);
-        if (params.city) parts.push(`avohra__city__c='${params.city}'`);
-        if (params.bedrooms) parts.push(`avohra__beds__c=${params.bedrooms}`);
-        if (params.priceMin) parts.push(`avohra__price__c>=${params.priceMin}`);
-        if (params.priceMax) parts.push(`avohra__price__c<=${params.priceMax}`);
+        if (params.bottom && params.bottom != '' && params.bottom != 'all') {
+            parts.push(`amount>='${params.bottom}'`);
+        }
+        parts.push('isclosed = false');
+        // TODO specify current quarter
         if (parts.length>0) {
             where = "WHERE " + parts.join(' AND ');
         }
     }
     return new Promise((resolve, reject) => {
-        let q = `SELECT id,
-                    avohra__title__c,
-                    avohra__address__c,
-                    avohra__city__c,
-                    avohra__state__c,
-                    avohra__price__c,
-                    avohra__beds__c,
-                    avohra__baths__c,
-                    avohra__picture__c
-                FROM avohra__property__c
-                ${where}
-                LIMIT 5`;
+        let q = `SELECT COUNT(id),
+                    SUM(amount),
+                    COUNT_DISTINCT(opportunity.owner.name)
+                FROM opportunity
+                ${where}`;
+        console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
                 reject(err);
@@ -108,65 +103,16 @@ let findProperties = (params) => {
 
 };
 
-let findPriceChanges = () => {
-    return new Promise((resolve, reject) => {
-        let q = `SELECT
-                    OldValue,
-                    NewValue,
-                    CreatedDate,
-                    Field,
-                    Parent.Id,
-                    Parent.avohra__title__c,
-                    Parent.avohra__address__c,
-                    Parent.avohra__city__c,
-                    Parent.avohra__state__c,
-                    Parent.avohra__price__c,
-                    Parent.avohra__beds__c,
-                    Parent.avohra__baths__c,
-                    Parent.avohra__picture__c
-                FROM avohra__property__history
-                WHERE field = 'avohra__Price__c'
-                ORDER BY CreatedDate DESC
-                LIMIT 3`;
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject("An error as occurred");
-            } else {
-                console.log("Response");
-                console.log(resp.records);
-                resolve(resp.records);
-            }
-        });
-    });
-};
-
-
-let createCase = (propertyId, customerName, customerId) => {
-
-    return new Promise((resolve, reject) => {
-        let c = nforce.createSObject('Case');
-        c.set('subject', `Contact ${customerName} (Facebook Customer)`);
-        c.set('description', "Facebook id: " + customerId);
-        c.set('origin', 'Facebook Bot');
-        c.set('status', 'New');
-        c.set('avohra__Property__c', propertyId);
-
-        org.insert({sobject: c}, err => {
-            if (err) {
-                console.error(err);
-                reject("An error occurred while creating a case");
-            } else {
-                resolve(c);
-            }
-        });
-    });
-
-};
-
 login();
 
 exports.org = org;
-exports.findProperties = findProperties;
-exports.findPriceChanges = findPriceChanges;
-exports.createCase = createCase;
-exports.findTopDeals = findTopDeals;
+exports.countOpportunities = countOpportunities;
+exports.findOpportunities = findOpportunities;
+
+
+
+
+
+
+
+

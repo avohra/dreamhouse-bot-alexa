@@ -12,7 +12,7 @@ var verbalizeOpportunites = (opps) => {
 
 exports.CountDeals = (slots, session, response, dialogState) => {
     if (dialogState == 'COMPLETED') {
-        salesforce.countDeals({bottom: slots.Bottom.value })
+        salesforce.countOpportunities({bottom: slots.Bottom.value })
             .then(opps => {
              if (opps && opps.length>0) {
                  let text = `OK, I found `,
