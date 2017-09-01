@@ -12,13 +12,18 @@ var verbalizeOpportunites = (opps) => {
 
 exports.CountDeals = (slots, session, response, dialogState) => {
     if (dialogState == 'COMPLETED') {
-        salesforce.countOpportunities({bottom: slots.Bottom.value })
+        let bottom = slots.Bottom.value;
+        salesforce.countOpportunities({bottom: bottom })
             .then(opps => {
              if (opps && opps.length>0) {
-                 let text = `OK, I found `,
+                 let text,
                      result = opps[0];
                  console.log(result.get('expr0'));
-                 text = `There are ${result.get('expr0')} opportunties over $${slots.Bottom.value}, <break time="0.5s" /> totaling ${result.get('expr1')}, <break time="0.5s" /> assigned to ${result.get('expr2')} reps.`;
+                 text = `There are ${result.get('expr0')} opportunties`;
+                 if (!isNaN(bottom)) {
+                     text += ` over $${bottom}`;
+                 }
+                 text += `, <break time="0.5s" /> totaling ${result.get('expr1')}, <break time="0.5s" /> assigned to ${result.get('expr2')} reps.`;
                  response.say(text);
              } else {
                  response.say(`Sorry, I didn't find any open deals`);
