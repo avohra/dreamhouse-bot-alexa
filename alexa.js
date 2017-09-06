@@ -46,6 +46,8 @@ module.exports = (req, res) => {
     }
 
     console.log("Intent:", intent)
+    console.log("Slots:", slots)
+    console.log("DialoState:", dialogState)
 
     return {
 
