@@ -127,6 +127,7 @@ login();
 exports.org = org;
 exports.countOpportunities = countOpportunities;
 exports.findOpportunities = findOpportunities;
+exports.findContacts = findContacts;
 
 
 
