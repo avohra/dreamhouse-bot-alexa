@@ -15,6 +15,8 @@ module.exports = (req, res) => {
 
         let outputSpeech = {};
 
+        console.log("Output",text);
+
         if (text.indexOf("/>") > 0 || text.indexOf("</")) {
             outputSpeech.type = 'SSML';
             outputSpeech.ssml = "<speak>" + text + "</speak>";
