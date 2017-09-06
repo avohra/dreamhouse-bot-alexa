@@ -5,7 +5,7 @@ let nforce = require('nforce'),
     SF_CLIENT_ID = process.env.SF_CLIENT_ID,
     SF_CLIENT_SECRET = process.env.SF_CLIENT_SECRET,
     SF_USER_NAME = process.env.SF_USER_NAME,
-    SF_PASSWORD = process.env.SF_PASSWORD;
+    SF_PASSWORD = process.env.SF_PASSWORD,
     SF_LOGIN_URL = process.env.SF_LOGIN_URL;
 
 let org = nforce.createConnection({
