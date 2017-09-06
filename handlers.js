@@ -167,8 +167,9 @@ let RequestUpdate = (slots, session, response, dialogState) => {
 }
 let SalesRepProgress = (slots, session, response, dialogState) => {
     Promise.all([salesforce.availableOpportunities(), salesforce.closedOpportunities(), salesforce.resolvedOpportunities()]).then(values => { 
-        console.log(values);
-        response.say(`You are $0 below target for the week and your resolution rate of ${(values[2][0].get('expr1')/values[0][0].get('expr1')*100)}% and conversion rate of ${(values[1][0].get('expr0')/values[1][0].get('expr1')*100)}% are both significantly below the team average.`);
+        let resRate = (values[2][0].get('expr1')/values[0][0].get('expr1')*100).toFixed(2),
+            convRate = (values[1][0].get('expr0')/values[1][0].get('expr1')*100).toFixed(2);
+        response.say(`You are $0 below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
     }).catch((err) => {
         console.error(err);
         response.say("Oops. Something went wrong");
