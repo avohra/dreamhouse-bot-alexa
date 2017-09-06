@@ -68,7 +68,7 @@ let FindTopDeals = (slots, session, response, dialogState) => {
 let EmailRep = (slots, session, response, dialogState) => {
     salesforce.findContacts({name: slots.SalesRep.value}).then(contacts => {
         if (contacts && contacts.length)
-            response.say(`OK, sending email ${slots.Subject.value} to ${contacts[0].Email} now.`);
+            response.say(`OK, sending email ${slots.Subject.value} to ${contacts[0].get('Email')} now.`);
         else
             response.say(`Sorry, I didn't find anyone with the name ${slots.SalesRep.value}`);
     }).catch((err) => {
@@ -92,7 +92,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
 let RequestUpdate = (slots, session, response, dialogState) => {
     salesforce.findContacts({name: slots.RequestSalesRep.value}).then(contacts => {
         if (contacts && contacts.length)
-            response.say(`OK, I will send ${contacts[0].Email} an email on your behalf`);
+            response.say(`OK, I will send ${contacts[0].get('Email')} an email on your behalf`);
         else
             response.say(`Sorry, I didn't find anyone with the name ${slots.RequestSalesRep.value}`);
     }).catch((err) => {
