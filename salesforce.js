@@ -122,6 +122,7 @@ let findContacts = (params) => {
     });
 }
 
+<<<<<<< HEAD
 let findWeeklyTarget = (params) => {
     console.log("Find total target for this week");
     return new Promise((resolve, reject) => {
@@ -131,6 +132,14 @@ let findWeeklyTarget = (params) => {
                 FROM ssi_zth__sales_target_line_item__c
                 WHERE ssi_zth__start_date__c <= TODAY 
                     AND ssi_zth__end_date__c >= TODAY`;
+=======
+let availableOpportunities = (params) => {
+    console.log("Available opps " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+                 FROM Opportunity
+                 WHERE StageName NOT IN ('House Account') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+>>>>>>> 57ca4cfb41acf19988ec3c6063543fb21bb09bf7
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -140,6 +149,7 @@ let findWeeklyTarget = (params) => {
             }
         });
     });
+<<<<<<< HEAD
 };
 
 let findWeeklyClosed = (params) => {
@@ -160,6 +170,16 @@ let findWeeklyClosed = (params) => {
     }
     return new Promise((resolve, reject) => {
         let q = `select SUM(amount) total from opportunity ${where}`;
+=======
+}
+
+let resolvedOpportunities = (params) => {
+    console.log("Resolved opps " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+                 FROM Opportunity
+                 WHERE StageName IN ('Closed Sale', 'No Service') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+>>>>>>> 57ca4cfb41acf19988ec3c6063543fb21bb09bf7
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -171,6 +191,7 @@ let findWeeklyClosed = (params) => {
     });
 }
 
+<<<<<<< HEAD
 let findQuarterlyTarget = (params) => {
     console.log("Find total target for this quarter");
     return new Promise((resolve, reject) => {
@@ -178,6 +199,15 @@ let findQuarterlyTarget = (params) => {
         let q = `select SUM(ssi_zth__target__c) total
                 FROM ssi_zth__sales_target_line_item__c
                 WHERE SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__r.name = '2016-Q1'`;
+=======
+
+let closedOpportunities = (params) => {
+    console.log("Closed opps " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+                 FROM Opportunity
+                 WHERE StageName = 'Closed Sale' AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+>>>>>>> 57ca4cfb41acf19988ec3c6063543fb21bb09bf7
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -187,8 +217,29 @@ let findQuarterlyTarget = (params) => {
             }
         });
     });
+<<<<<<< HEAD
 };
 
+=======
+}
+
+let targetAsOf = (params) => {
+    console.log("Aggregate targets " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(SSI_ZTH__Target__c)
+                 FROM SSI_ZTH__Sales_Target_Line_Item__c
+                 WHERE SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+>>>>>>> 57ca4cfb41acf19988ec3c6063543fb21bb09bf7
 
 login();
 
@@ -196,7 +247,14 @@ exports.org = org;
 exports.countOpportunities = countOpportunities;
 exports.findOpportunities = findOpportunities;
 exports.findContacts = findContacts;
+<<<<<<< HEAD
 exports.findWeeklyTarget = findWeeklyTarget;
+=======
+exports.availableOpportunities = availableOpportunities;
+exports.closedOpportunities = closedOpportunities;
+exports.resolvedOpportunities = resolvedOpportunities;
+exports.targetAsOf = targetAsOf;
+>>>>>>> 57ca4cfb41acf19988ec3c6063543fb21bb09bf7
 
 
 
