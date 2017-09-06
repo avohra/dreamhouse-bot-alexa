@@ -122,12 +122,81 @@ let findContacts = (params) => {
     });
 }
 
+let findWeeklyTarget = (params) => {
+    console.log("Find total target for this week");
+    return new Promise((resolve, reject) => {
+        let q = `select MIN(ssi_zth__start_date__c) minstart, 
+                    MAX(ssi_zth__end_date__c) maxend, 
+                    SUM(ssi_zth__target__c) total
+                FROM ssi_zth__sales_target_line_item__c
+                WHERE ssi_zth__start_date__c <= TODAY 
+                    AND ssi_zth__end_date__c >= TODAY`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+};
+
+let findWeeklyClosed = (params) => {
+    console.log("Find total amount closed for period between " + params.minstart + " and " + params.maxend);
+    let where = "";
+    if (params) {
+        let parts = [];
+        if (params.minstart && params.minstart != '') {
+            parts.push(`closedate >= ${params.minstart}`);
+        }
+        if (params.maxend && params.maxend != '') {
+            parts.push(`closedate <= ${params.maxend}`);
+        }
+        parts.push('isclosed = true');
+        if (parts.length>0) {
+            where = "WHERE " + parts.join(' AND ');
+        }
+    }
+    return new Promise((resolve, reject) => {
+        let q = `select SUM(amount) total from opportunity ${where}`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
+let findQuarterlyTarget = (params) => {
+    console.log("Find total target for this quarter");
+    return new Promise((resolve, reject) => {
+        // TODO: Replace the period name with current one
+        let q = `select SUM(ssi_zth__target__c) total
+                FROM ssi_zth__sales_target_line_item__c
+                WHERE SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__r.name = '2016-Q1'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+};
+
+
 login();
 
 exports.org = org;
 exports.countOpportunities = countOpportunities;
 exports.findOpportunities = findOpportunities;
 exports.findContacts = findContacts;
+exports.findWeeklyTarget = findWeeklyTarget;
 
 
 

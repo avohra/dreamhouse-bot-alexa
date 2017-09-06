@@ -87,7 +87,72 @@ let LaggardRep= (slots, session, response, dialogState) => {
     response.say("Not Implemented");
 }
 let QuarterlyProgress = (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    salesforce.findWeeklyTarget({})
+        .then(results => {
+            if (results && results.length>0) {
+                let result = results[0];
+                console.log('findWeeklyTarget result: ' + result);
+                let minstart = result.get('minstart');
+                let maxend = result.get('maxend');
+                let weeklyTarget = result.get('total');
+                salesforce.findPeriodClosed({ minstart: minstart, maxend: maxend })
+                    .then(closedResults => {
+                        if (closedResults && closedResults.length>0) {
+                            let closedResult = closedResults[0];
+                            let weeklyClosed = closedResult.get('total');
+                            salesforce.findQuarterlyTarget({ minstart: minstart, maxend: maxend })
+                                .then(qtResults => {
+                                    if (qtResults && qtResults.length>0) {
+                                        let qtResult = qtResults[0];
+                                        let quarterlyTarget = qtResult.get('total');
+                                        let qtrStart = result.get('minstart');
+                                        let qtrEnd = result.get('maxend');
+                                        salesforce.findPeriodClosed({ minstart: qtrStart, maxend: qtrEnd })
+                                            .then(qcResults => {
+                                                if (qcResults && qcResults.length>0) {
+                                                    let qcResult = qcResults[0];
+                                                    let quarterlyClosed = qcResults.get('total');
+                                                    let weeklyMiss = weeklyTarget - weeklyClosed;
+                                                    let quarterlyMiss = quarterlyTarget - quarterlyClosed;
+                                                    let text = 'For this week of the quarter, the team is ';
+                                                    text += ` ${weeklyMiss} off of the pace and ${quarterlyMiss} `;
+                                                    text += ' below the end of quarter target';
+                                                    response.say(text);
+                                                } else {
+                                                    response.say(`Sorry, I couldn't find any closed data`);
+                                                }
+                                            }).
+                                            .catch((err) => {
+                                                console.error(err);
+                                                response.say("Oops. Something went wrong");
+                                            });
+                                        response.say(text);
+                                    } else {
+                                        response.say(`Sorry, I couldn't find any closed data`);
+                                    }
+                                }).
+                                .catch((err) => {
+                                    console.error(err);
+                                    response.say("Oops. Something went wrong");
+                                });
+                            response.say(text);
+                        } else {
+                            response.say(`Sorry, I couldn't find any target data`);
+                        }
+                    }).
+                    .catch((err) => {
+                        console.error(err);
+                        response.say("Oops. Something went wrong");
+                    });
+                response.say(text);
+            } else {
+                response.say(`Sorry, I couldn't find any target data`);
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            response.say("Oops. Something went wrong");
+        });      
 }
 let RequestUpdate = (slots, session, response, dialogState) => {
     salesforce.findContacts({name: slots.RequestSalesRep.value}).then(contacts => {
