@@ -108,7 +108,7 @@ let countOpportunities = (params) => {
 let findContacts = (params) => {
     console.log("Count deals over " + params.name);
     return new Promise((resolve, reject) => {
-        let q = `SELECT Name, Email, Account.Name
+        let q = `SELECT Name, Email, Account.Name, FirstName
                 FROM Contact
                 WHERE Name like '${params.name}%'`;
         console.log('SQL: ' + q);
