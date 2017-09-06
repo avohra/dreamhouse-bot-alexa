@@ -125,7 +125,7 @@ let findContacts = (params) => {
 let availableOpportunities = (params) => {
     console.log("Available opps " + params);
     return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+        let q = `SELECT Sum(Amount), Sum(ServiceSource1__REN_Renewal_Target__c)
                  FROM Opportunity
                  WHERE StageName NOT IN ('House Account') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
         console.log('SQL: ' + q);
@@ -142,7 +142,7 @@ let availableOpportunities = (params) => {
 let resolvedOpportunities = (params) => {
     console.log("Resolved opps " + params);
     return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+        let q = `SELECT Sum(Amount), Sum(ServiceSource1__REN_Renewal_Target__c)
                  FROM Opportunity
                  WHERE StageName IN ('Closed Sale', 'No Service') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
         console.log('SQL: ' + q);
@@ -160,7 +160,7 @@ let resolvedOpportunities = (params) => {
 let closedOpportunities = (params) => {
     console.log("Closed opps " + params);
     return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+        let q = `SELECT Sum(Amount), Sum(ServiceSource1__REN_Renewal_Target__c)
                  FROM Opportunity
                  WHERE StageName = 'Closed Sale' AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
         console.log('SQL: ' + q);
