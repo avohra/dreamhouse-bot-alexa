@@ -144,7 +144,7 @@ let resolvedOpportunities = (params) => {
     return new Promise((resolve, reject) => {
         let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
                  FROM Opportunity
-                 WHERE StageName IN ('Closed Sale', 'No Service') SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+                 WHERE StageName IN ('Closed Sale', 'No Service') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
