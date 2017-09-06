@@ -123,8 +123,8 @@ let findContacts = (params) => {
 }
 
 let availableOpportunities = (params) => {
-    console.log("Aggregate targets " + params);
-    eturn new Promise((resolve, reject) => {
+    console.log("Available opps " + params);
+    return new Promise((resolve, reject) => {
         let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
                  FROM Opportunity
                  WHERE StageName NOT IN ('House Account') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
@@ -140,7 +140,7 @@ let availableOpportunities = (params) => {
 }
 
 let resolvedOpportunities = (params) => {
-    console.log("Aggregate targets " + params);
+    console.log("Resolved opps " + params);
     return new Promise((resolve, reject) => {
         let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
                  FROM Opportunity
@@ -158,7 +158,7 @@ let resolvedOpportunities = (params) => {
 
 
 let closedOpportunities = (params) => {
-    console.log("Aggregate targets " + params);
+    console.log("Closed opps " + params);
     return new Promise((resolve, reject) => {
         let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
                  FROM Opportunity
