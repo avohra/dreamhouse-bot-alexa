@@ -101,7 +101,12 @@ let RequestUpdate = (slots, session, response, dialogState) => {
     });    
 }
 let SalesRepProgress = (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    Promise.all([salesforce.availableOpportunities(), salesforce.closedOpportunities(), salesforce.resolvedOpportunities()]).then(values => { 
+        response.say(`You are <$> below target for the week and your resolution rate of ${(values[2].get('expr1')/values[0].get('expr1')*100)}% and conversion rate of ${(values[1].get('expr0')/values[1].get('expr1')*100)}% are both significantly below the team average.`);
+    }).catch((err) => {
+        console.error(err);
+        response.say("Oops. Something went wrong");
+    });     
 }
 
 exports.FindTopDeals = _.wrap(FindTopDeals, doUntilComplete);

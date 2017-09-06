@@ -122,12 +122,85 @@ let findContacts = (params) => {
     });
 }
 
+let availableOpportunities = (params) => {
+    console.log("Aggregate targets " + params);
+    eturn new Promise((resolve, reject) => {
+        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+                 FROM Opportunity
+                 WHERE StageName NOT IN ('House Account') AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
+let resolvedOpportunities = (params) => {
+    console.log("Aggregate targets " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+                 FROM Opportunity
+                 WHERE StageName IN ('Closed Sale', 'No Service') SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
+
+let closedOpportunities = (params) => {
+    console.log("Aggregate targets " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(Amount), Sum(ExpectedRevenue)
+                 FROM Opportunity
+                 WHERE StageName = 'Closed Sale' AND SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
+let targetAsOf = (params) => {
+    console.log("Aggregate targets " + params);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Sum(SSI_ZTH__Target__c)
+                 FROM SSI_ZTH__Sales_Target_Line_Item__c
+                 WHERE SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
 login();
 
 exports.org = org;
 exports.countOpportunities = countOpportunities;
 exports.findOpportunities = findOpportunities;
 exports.findContacts = findContacts;
+exports.availableOpportunities = availableOpportunities;
+exports.closedOpportunities = closedOpportunities;
+exports.resolvedOpportunities = resolvedOpportunities;
+exports.targetAsOf = targetAsOf;
 
 
 
