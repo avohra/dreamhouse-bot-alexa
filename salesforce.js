@@ -105,6 +105,23 @@ let countOpportunities = (params) => {
 
 };
 
+let findContacts = (params) => {
+    console.log("Count deals over " + params.name);
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Name, Email, Account.Name
+                FROM Contact
+                WHERE Name like '${params.name}%'`;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
 login();
 
 exports.org = org;

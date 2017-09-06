@@ -66,7 +66,16 @@ let FindTopDeals = (slots, session, response, dialogState) => {
 }
 
 let EmailRep = (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    salesforce.findContacts({name: slots.SalesRep.value}).then(contacts => {
+        if (contacts && contacts.length)
+            response.say(`OK, sending email ${slots.Subject.value} to ${contacts[0].Email} now.`);
+        else
+            response.say(`Sorry, I didn't find anyone with the name ${slots.SalesRep.value}`);
+    }).catch((err) => {
+        console.error(err);
+        response.say("Oops. Something went wrong");
+    });   
+    
 }
 let ImproveConvRate = (slots, session, response, dialogState) => {
     response.say("Not Implemented");
@@ -81,7 +90,15 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
     response.say("Not Implemented");
 }
 let RequestUpdate = (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    salesforce.findContacts({name: slots.RequestSalesRep.value}).then(contacts => {
+        if (contacts && contacts.length)
+            response.say(`OK, I will send ${contacts[0].Email} an email on your behalf`);
+        else
+            response.say(`Sorry, I didn't find anyone with the name ${slots.RequestSalesRep.value}`);
+    }).catch((err) => {
+        console.error(err);
+        response.say("Oops. Something went wrong");
+    });    
 }
 let SalesRepProgress = (slots, session, response, dialogState) => {
     response.say("Not Implemented");
