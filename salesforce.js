@@ -157,7 +157,7 @@ let findPeriodClosed = (params) => {
 }
 
 let aggregateOpportunities = (params) => {
-    console.log("Aggregate opps " + params);
+    console.log("Aggregate opps " + JSON.stringify(params));
     let clause = [];
     if (params) {
         if (params.salesRep)
@@ -194,8 +194,9 @@ let aggregateOpportunities = (params) => {
 
 
 let aggregateTargets = (params) => {
-    console.log("Aggregate targets " + params);
+    console.log("Aggregate targets " + JSON.stringify(params));
     let clause = [];
+    let moreFields = '';
     let group = '';
     if (params) {
         if (params.salesRep)
@@ -211,6 +212,7 @@ let aggregateTargets = (params) => {
             clause.push(`SSI_ZTH__End_Date__c >= ${params.dayInRange}`);
         }
         if (params.groupByRep) {
+            moreFields = ', SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name ';
             group = ' GROUP BY SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name';
         }
     }
@@ -218,8 +220,8 @@ let aggregateTargets = (params) => {
         var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount,
                      Count(Name) targetCount,
                      MIN(ssi_zth__start_date__c) minstart, 
-                     MAX(ssi_zth__end_date__c) maxend,
-                     MIN(SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name) employee
+                     MAX(ssi_zth__end_date__c) maxend
+                     ${moreFields} employee
                  FROM SSI_ZTH__Sales_Target_Line_Item__c`;
         if (clause.length)
             q = q + ' WHERE ' + clause.join(' AND ');
