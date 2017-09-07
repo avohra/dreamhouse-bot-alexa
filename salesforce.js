@@ -233,7 +233,7 @@ let aggregateTargets = (params) => {
         if (params.periodStart)
             clause.push(`SSI_ZTH__Start_Date__c >= ${params.periodStart}`);
         if (params.periodEnd)
-            clause.push(`SSI_ZTH__End_Date__c < ${params.periodEnd}`);
+            clause.push(`SSI_ZTH__Start_Date__c < ${params.periodEnd}`);
     }
     return new Promise((resolve, reject) => {
         var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) targetCount
