@@ -38,13 +38,13 @@ let CountDeals = (slots, session, response, dialogState) => {
     let params = { 
         "!salesStage": ['House Account', 'Closed Sale', 'No Service']
     };
-    if (slots.LessThan.value !== '?')
+    if (_.isNumber(slots.LessThan.value))
         params.lt = slots.LessThan.value;
-    if (slots.GreaterThan.value !== '?')
+    if  (_.isNumber(slots.GreaterThan.value))
         params.gt = slots.GreaterThan.value;
-    if (slots.GreaterThanOrEqual.value !== '?')
+    if  (_.isNumber(slots.GreaterThanOrEqual.value))
         params.gte = slots.GreaterThanOrEqual.value;
-    
+
     salesforce.aggregateOpportunities(params)
         .then(opps => {
          if (opps && opps.length>0) {
