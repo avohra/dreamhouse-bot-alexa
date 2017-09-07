@@ -229,7 +229,7 @@ let aggregateTargets = (params) => {
         if (params.salesRep)
             clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${params.salesRep}%'`);
         if (params.period)
-            clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__c.Name = '${params.period}'`);
+            clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__r.Name = '${params.period}'`);
         if (params.periodStart)
             clause.push(`SSI_ZTH__Start_Date__c >= ${params.periodStart}`);
         if (params.periodEnd)
