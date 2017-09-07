@@ -193,9 +193,9 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 if (gap == 0)
                     response.say(`You're OK. Your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both about the same as the team average.`);
                 else if (gap < 0)
-                    response.say(`You're doing well. You are $${gap} above target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly above the team average.`);
+                    response.say(`You're doing well. You are $${Math.absolute(gap)} above target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly above the team average.`);
                 else    
-                    response.say(`You are $${gap} below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
+                    response.say(`You are $${Math.absolute(gap)} below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
             
             }).catch((err) => {
                 console.error(err);
