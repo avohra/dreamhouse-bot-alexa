@@ -38,11 +38,11 @@ let CountDeals = (slots, session, response, dialogState) => {
     let params = { 
         "!salesStage": ['House Account', 'Closed Sale', 'No Service']
     };
-    if (_.isNumber(slots.LessThan.value))
+    if (!isNaN(slots.LessThan.value))
         params.lt = slots.LessThan.value;
-    if  (_.isNumber(slots.GreaterThan.value))
+    if  (!isNaN(slots.GreaterThan.value))
         params.gt = slots.GreaterThan.value;
-    if  (_.isNumber(slots.GreaterThanOrEqual.value))
+    if  (!isNaN(slots.GreaterThanOrEqual.value))
         params.gte = slots.GreaterThanOrEqual.value;
 
     salesforce.aggregateOpportunities(params)
@@ -52,11 +52,11 @@ let CountDeals = (slots, session, response, dialogState) => {
                  result = opps[0];
              console.log(result.get('oppCount'));
              text = `There are ${result.get('oppCount')} open opportunties`;
-             if (_.isNumber(params.lt)) {
+             if (!isNaN(params.lt)) {
                  text += ` below $${params.lt}`;
-             } else if (_.isNumber(params.gt)) {
+             } else if (!isNaN(params.gt)) {
                 text += ` above $${params.gt}`;
-             } else if (_.isNumber(params.gte)) {
+             } else if (!isNaN(params.gte)) {
                 text += ` above and inclusive of $${params.gte}`;
              }
              text += `, <break time="0.5s" /> totaling $${result.get('totalAmount')}, <break time="0.5s" /> assigned to ${result.get('repCount')} reps.`;
