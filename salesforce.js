@@ -79,7 +79,7 @@ let filterOpportunities = (params, select) => {
     });
 }
 let findOpportunities = (params) => {
-    console.log("Finding opportunities " + params);
+    console.log("Finding opportunities " + JSON.stringify(params));
     return filterOpportunities(params, "opportunity.account.name, amount, opportunity.owner.name");
 };
 
@@ -188,7 +188,7 @@ let aggregateTargets = (params) => {
 }
 
 let findPeriod = (params) => {
-    console.log("find period " + params);
+    console.log("find period " + JSON.stringify(params));
     var where = ''; 
     if (params && params.period)
         where =` WHERE Name = '${params.period}'`
