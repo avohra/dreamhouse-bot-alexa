@@ -87,7 +87,7 @@ let ImproveResRate = (slots, session, response, dialogState) => {
         let params = { 
             expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
             salesRep: SF_SALES_REP_NAME,
-            salesStage: ['Not Contacted']
+            salesStage: ['Contacted']
         };
         salesforce.aggregateOpportunities(params).then(stats => {
             if (stats[0].get('oppCount') > 0)
