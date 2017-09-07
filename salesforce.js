@@ -205,7 +205,7 @@ let aggregateOpportunities = (params) => {
             clause.push(`StageName NOT IN ('${params["!salesStage"].join(',')}')`)
     }
     return new Promise((resolve, reject) => {
-        var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) count
+        var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount
                  FROM Opportunity`;
         if (clause.length)
             q = q + 'WHERE ' + clause.join(' AND ');
@@ -236,7 +236,7 @@ let aggregateTargets = (params) => {
             clause.push(`SSI_ZTH__End_Date__c < ${params.periodEnd}`);
     }
     return new Promise((resolve, reject) => {
-        var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) Name
+        var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) targetCount
                  FROM SSI_ZTH__Sales_Target_Line_Item__c`;
         if (clause.length)
             q = q + 'WHERE ' + clause.join(' AND ');
