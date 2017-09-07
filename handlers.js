@@ -89,7 +89,7 @@ let ImproveResRate = (slots, session, response, dialogState) => {
             salesRep: SF_SALES_REP_NAME,
             salesStage: ['Not Contacted']
         };
-        salesforce.aggregateOpportunities(params).then({ stats =>
+        salesforce.aggregateOpportunities(params).then(stats => {
             response.say(`You have ${stats[0].get('oppCount')} carryover opportunities in the Not Contacted sales stage which represent $${stats[0].get('totalTargetAmount')} of target amount. Resolving the largest of these would be a good start`);
         });
     });
