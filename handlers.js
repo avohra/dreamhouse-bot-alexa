@@ -54,13 +54,15 @@ let CountDeals = (slots, session, response, dialogState) => {
 }
 
 let FindTopDeals = (slots, session, response, dialogState) => {
+    console.log(slots.OppSort.id, slots.OppSort.resolutions.resolutionsPerAuthority)
     let params = { 
         "!salesStage": ['House Account', 'Closed Sale', 'No Service'],
         region: slots.OppRegion.value,
         sort: {
             field: slots.OppSort.id,
             order: "DESC"
-        }
+        },
+        limit: 3
     };
     salesforce.findOpportunities(params)
         .then(opps => {
