@@ -327,6 +327,9 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             });     
     });    
 }
+let WhatShouldIDo = (slots, session, response, dialogState) => {
+    response.say('Get your shit done!')
+}
 
 exports.FindTopDeals = _.wrap(FindTopDeals, doUntilComplete);
 exports.CountDeals = _.wrap(CountDeals, doUntilComplete);
@@ -337,6 +340,7 @@ exports.LaggardRep = _.wrap(LaggardRep, doUntilComplete);
 exports.QuarterlyProgress = _.wrap(QuarterlyProgress, doUntilComplete);
 exports.RequestUpdate = _.wrap(RequestUpdate, doUntilComplete);
 exports.SalesRepProgress = _.wrap(SalesRepProgress, doUntilComplete);
+exports.WhatShouldIDo = WhatShouldIDo;
 
 
 

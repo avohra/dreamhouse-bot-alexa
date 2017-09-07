@@ -57,7 +57,7 @@ let filterOpportunities = (params, select) => {
         if (params.limit)
             limit = params.limit;
         if (params.region && params.region !== 'all')
-            clause.push(`account.site = '${params.region}'`)
+            clause.push(`SSI_ZTH__Client_Region__c = '${params.region}'`)
     }
     return new Promise((resolve, reject) => {
         var q = `SELECT ${select}
