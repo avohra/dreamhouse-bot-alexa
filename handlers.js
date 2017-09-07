@@ -122,7 +122,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
             });
             salesforce.findPeriodClosed({ groupByRep: true, minstart: minstart, maxend: maxend }).then(results => {
                 let maxGap = 0,
-                    laggard = null,
+                    laggard = null;
                 if (results && results.length) {
                     results.forEach(function(result)) {
                         let rep = result.get('owner.name');
