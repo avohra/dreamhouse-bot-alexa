@@ -20,7 +20,7 @@ app.post('/dreamhouse', (req, res) => {
         dialogState = alx.dialogState;
 
     if (type === 'LaunchRequest') {
-        response.say("Welcome to Dreamhouse");
+        response.say(`Hello, I am Jarvis <break time="0.5s" /> How can I help?`);
     } else if (type === 'IntentRequest') {
         let handler = handlers[intent];
         if (handler) {
