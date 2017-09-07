@@ -202,7 +202,7 @@ let aggregateOpportunities = (params) => {
         if(params.salesStage)
             clause.push(`StageName IN ('${params.salesStage.join(',')}')`)
         if(params['!salesStage'])
-            clause.push(`StageName NOT IN ('${params.salesStage.join(',')}')`)
+            clause.push(`StageName NOT IN ('${params["!salesStage"].join(',')}')`)
     }
     return new Promise((resolve, reject) => {
         var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) count
@@ -229,11 +229,11 @@ let aggregateTargets = (params) => {
         if (params.salesRep)
             clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${params.salesRep}%'`);
         if (params.period)
-            clause.push(`SSI_ZTH__Period__c`);
+            clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__c.Name = '${params.period}'`);
         if (params.periodStart)
-            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.periodStart}`);
+            clause.push(`SSI_ZTH__Start_Date__c >= ${params.periodStart}`);
         if (params.periodEnd)
-            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.periodEnd}`);
+            clause.push(`SSI_ZTH__End_Date__c < ${params.periodEnd}`);
     }
     return new Promise((resolve, reject) => {
         var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) Name
