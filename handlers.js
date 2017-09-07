@@ -121,8 +121,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                 } else {
                                                     response.say(`Sorry, I couldn't find any closed data`);
                                                 }
-                                            }).
-                                            .catch((err) => {
+                                            }).catch((err) => {
                                                 console.error(err);
                                                 response.say("Oops. Something went wrong");
                                             });
