@@ -87,7 +87,7 @@ let ImproveResRate = (slots, session, response, dialogState) => {
         let params = { 
             expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
             salesRep: SF_SALES_REP_NAME,
-            salesStage: ['Not Contacted']
+            salesStage: ['Contacted']
         };
         salesforce.aggregateOpportunities(params).then(stats => {
             response.say(`You have ${stats[0].get('oppCount')} carryover opportunities in the Not Contacted sales stage which represent $${stats[0].get('totalTargetAmount')} of target amount. Resolving the largest of these would be a good start`);
