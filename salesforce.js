@@ -142,7 +142,7 @@ let findWeeklyTarget = (params) => {
     });
 };
 
-let findWeeklyClosed = (params) => {
+let findPeriodClosed = (params) => {
     console.log("Find total amount closed for period between " + params.minstart + " and " + params.maxend);
     let where = "";
     if (params) {
