@@ -55,7 +55,7 @@ let filterOpportunities = (params, select) => {
         if (params.sort)
             sort.push([params.sort.field, params.sort.order].join(' ')); 
         if (params.limit)
-            limit = params;
+            limit = params.limit;
         if (params.region && params.region !== 'all')
             clause.push(`account.site = '${params.region}'`)
     }
