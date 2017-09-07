@@ -189,13 +189,13 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             let resRate = (values[2][0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2),
                 gap = values[3][0].get('totalAmount') - values[1][0].get('totalAmount');
-                
+                console.log(gap, values[3][0].get('totalAmount'), values[1][0].get('totalAmount'))
                 if (gap == 0)
                     response.say(`You're OK. Your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both about the same as the team average.`);
                 else if (gap < 0)
-                    response.say(`You're doing well. You are $${Math.absolute(gap)} above target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly above the team average.`);
+                    response.say(`You're doing well. You are $${Math.abs(gap)} above target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly above the team average.`);
                 else    
-                    response.say(`You are $${Math.absolute(gap)} below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
+                    response.say(`You are $${Math.abs(gap)} below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
             
             }).catch((err) => {
                 console.error(err);
