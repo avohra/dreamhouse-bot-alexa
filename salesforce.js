@@ -195,13 +195,17 @@ let aggregateOpportunities = (params) => {
     if (params) {
         if (params.salesRep)
             clause.push(`Owner.Name like '${params.salesRep}%'`);
-        if (params.periodStart)
-            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.periodStart}`)
-        if (params.periodEnd)
-            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.periodEnd}`)
-        if(params.salesStage)
+        if (params.resolutionStart)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.resolutionStart}`)
+        if (params.resolutionEnd)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.resolutionEnd}`)
+        if (params.expirationStart)
+            clause.push(`ServiceSource1__REN_Earliest_Expiration_Date__c >= ${params.expirationStart}`)
+        if (params.expirationEnd)
+            clause.push(`ServiceSource1__REN_Earliest_Expiration_Date__c < ${params.expirationEnd}`)
+        if (params.salesStage)
             clause.push(`StageName IN ('${params.salesStage.join("','")}')`)
-        if(params['!salesStage'])
+        if (params['!salesStage'])
             clause.push(`StageName NOT IN ('${params["!salesStage"].join("','")}')`)
     }
     return new Promise((resolve, reject) => {

@@ -83,7 +83,16 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
     response.say("Not Implemented");
 }
 let ImproveResRate = (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
+        let params = { 
+            expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
+            salesRep: SF_SALES_REP_NAME,
+            salesStage: ['Not Contacted']
+        };
+        salesforce.aggregateOpportunities(params).then({ stats =>
+            response.say(`You have ${stats[0].get('oppCount')} carryover opportunities in the Not Contacted sales stage which represent $${stats[0].get('totalTargetAmount')} of target amount. Resolving the largest of these would be a good start`);
+        });
+    });
 }
 let LaggardRep= (slots, session, response, dialogState) => {
     response.say("Not Implemented");
@@ -167,8 +176,8 @@ let RequestUpdate = (slots, session, response, dialogState) => {
 let SalesRepProgress = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
-            periodStart: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
-            periodEnd: periods[0].get('SSI_ZTH__Period_End_Date__c'), 
+            resolutionStart: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
+            resolutionEnd: periods[0].get('SSI_ZTH__Period_End_Date__c'), 
             salesRep: SF_SALES_REP_NAME 
         };
         Promise.all([
@@ -182,7 +191,9 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             salesforce.aggregateOpportunities(_.extend({ 
                 salesStage: ['Closed Sale', 'No Service']
             }, params)),
-            salesforce.aggregateTargets(_.extend({ 
+            salesforce.aggregateTargets(_.extend({
+                periodStart: params.resolutionStart,
+                periodEnd: params.resolutionEnd,
                 period: periods[0].get('Name')
             }, params))
         ]).then(values => { 
