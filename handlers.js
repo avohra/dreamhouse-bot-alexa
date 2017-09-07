@@ -126,7 +126,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                     laggard = null;
                 if (results && results.length) {
                     results.forEach(function(result) {
-                        let rep = result.get('owner');
+                        let rep = result.get('owner.name');
                         let closed = result.get('total');
                         let repTarget = sortedReps[rep];
                         if (!repTarget) return;
