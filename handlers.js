@@ -178,14 +178,18 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             }), 
             salesforce.aggregateOpportunities(_.extend({ 
                 salesStage: ['Closed Sale']
-            }, params), 
+            }, params)), 
             salesforce.aggregateOpportunities(_.extend({ 
                 salesStage: ['Closed Sale', 'No Service']
-            }, params)
+            }, params)),
+            salesforce.aggregateTargets(_.extend({ 
+                period: periods[0].get('Name')
+            }, params))
         ]).then(values => { 
             let resRate = (values[2][0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
-                    convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2);
-                response.say(`You are $0 below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
+                convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2),
+                gap = values[3][0].get() - values[1][0].get('totalAmount');
+                response.say(`You are ${gap} below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
             }).catch((err) => {
                 console.error(err);
                 response.say("Oops. Something went wrong");
