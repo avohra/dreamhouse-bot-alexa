@@ -126,6 +126,7 @@ let findPeriodClosed = (params) => {
     console.log("Find total amount closed for period:" + JSON.stringify(params));
     let where = "";
     let group = "";
+    let moreFields = "";
     if (params) {
         let parts = [];
         if (params.minstart && params.minstart != '') {
@@ -141,10 +142,12 @@ let findPeriodClosed = (params) => {
 
         if (params.groupByRep) {
             group = 'GROUP BY owner.name';
+            moreFields = ", owner.name ";
         }
     }
     return new Promise((resolve, reject) => {
-        let q = `select SUM(amount) total, MIN(owner.name) owner from opportunity ${where} ${group}`;
+        let q = `select SUM(amount) total
+            ${moreFields} from opportunity ${where} ${group}`;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
