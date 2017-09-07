@@ -28,9 +28,9 @@ let login = () => {
     });
 };
 let filterOpportunities = (params, select) => {
-    let clause = [],
+    var clause = [],
         sort = [],
-        limit = -1;
+        limit = 0;
     if (params) {
         if (params.salesRep)
             clause.push(`Owner.Name like '${params.salesRep}%'`);
@@ -66,7 +66,7 @@ let filterOpportunities = (params, select) => {
             q = q + ' WHERE ' + clause.join(' AND ');
         if (sort.length)
             q = q + ' ORDER BY ' + sort.join(',') + ' NULLS LAST';
-        if (limit > -1)
+        if (limit > 0)
             q = q + ' LIMIT ' + limit;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
