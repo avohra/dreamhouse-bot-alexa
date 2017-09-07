@@ -124,7 +124,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 let maxGap = 0,
                     laggard = null;
                 if (results && results.length) {
-                    results.forEach(function(result)) {
+                    results.forEach(function(result) {
                         let rep = result.get('owner.name');
                         let closed = result.get('total);
                         let repTarget = sortedReps[rep];
@@ -134,7 +134,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                             laggard = rep;
                             maxGap = repTarget.gap;
                         }
-                    }
+                    });
                     response.say(`${laggard} is the furthest from target this week at ${maxGap} below`);
                 }
                 else
