@@ -162,16 +162,28 @@ let LaggardRep= (slots, session, response, dialogState) => {
                         let closed = result.get('total');
                         let repTarget = sortedReps[rep];
                         if (!repTarget) return;
+                        repTarget.foundClosed = true;
                         repTarget.gap = repTarget.target - closed;
                         if (!laggard || repTarget.gap > maxGap) {
                             laggard = rep;
                             maxGap = repTarget.gap;
                         }
                     });
-                    response.say(`${laggard} is the furthest from target this week at ${maxGap} below`);
                 }
-                else
-                    response.say('Sorry, there was nothing closed in order to determine worst performing rep.');
+                
+                // Look for reps who closed nothing.
+                let targetReps = _.keys(sortedReps);
+                targetReps.forEach(function(rep) {
+                    let repTarget = sortedReps[rep];
+                    if (!repTarget.foundClosed) {
+                        repTarget.gap = repTarget.target;
+                        if (!laggard || repTarget.gap > maxGap) {
+                            laggard = rep;
+                            maxGap = repTarget.gap;
+                        }
+                    }
+                });
+                response.say(`${laggard} is the furthest from target this week at ${maxGap} below`);
             });
         }
         else
