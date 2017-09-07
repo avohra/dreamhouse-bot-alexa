@@ -164,6 +164,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                             let closedResult = closedResults[0];
                             let weeklyClosed = closedResult.get('total');
                             // TODO: Replace the period name with current one
+                            console.log('findWeeklyClosed result: ' + closedResult);
                             salesforce.aggregateTargets({ period: '2016-Q1' })
                                 .then(qtResults => {
                                     if (qtResults && qtResults.length>0) {
@@ -171,6 +172,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                         let quarterlyTarget = qtResult.get('totalAmount');
                                         let qtrStart = result.get('minstart');
                                         let qtrEnd = result.get('maxend');
+                                        console.log('findQuarterlyTarget result: ' + qtResult);
                                         salesforce.findPeriodClosed({ minstart: qtrStart, maxend: qtrEnd })
                                             .then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
@@ -181,29 +183,20 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                     let text = 'For this week of the quarter, the team is ';
                                                     text += ` ${weeklyMiss} off of the pace and ${quarterlyMiss} `;
                                                     text += ' below the end of quarter target';
+                                                    console.log('findQuarterlyClosed result: ' + qcResult);
                                                     response.say(text);
                                                 } else {
                                                     response.say(`Sorry, I couldn't find any closed data`);
                                                 }
-                                            }).catch((err) => {
-                                                console.error(err);
-                                                response.say("Oops. Something went wrong");
                                             });
                                         response.say(text);
                                     } else {
                                         response.say(`Sorry, I couldn't find any closed data`);
                                     }
-                                }).catch((err) => {
-                                    console.error(err);
-                                    response.say("Oops. Something went wrong");
                                 });
-                            response.say(text);
                         } else {
                             response.say(`Sorry, I couldn't find any target data`);
                         }
-                    }).catch((err) => {
-                        console.error(err);
-                        response.say("Oops. Something went wrong");
                     });
                 response.say(text);
             } else {

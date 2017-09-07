@@ -123,7 +123,7 @@ let findContacts = (params) => {
 }
 
 let findPeriodClosed = (params) => {
-    console.log("Find total amount closed for period between " + params.minstart + " and " + params.maxend);
+    console.log("Find total amount closed for period:" + params);
     let where = "";
     let group = "";
     if (params) {
