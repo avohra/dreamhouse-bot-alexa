@@ -154,7 +154,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
         .then(results => {
             if (results && results.length>0) {
                 let result = results[0];
-                console.log('findWeeklyTarget result: ' + result);
+                console.log('findWeeklyTarget result: ' + JSON.stringify(result));
                 let minstart = result.get('minstart');
                 let maxend = result.get('maxend');
                 let weeklyTarget = result.get('totalAmount');
@@ -164,7 +164,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                             let closedResult = closedResults[0];
                             let weeklyClosed = closedResult.get('total');
                             // TODO: Replace the period name with current one
-                            console.log('findWeeklyClosed result: ' + closedResult);
+                            console.log('findWeeklyClosed result: ' + JSON.stringify(closedResult));
                             salesforce.aggregateTargets({ period: '2016-Q1' })
                                 .then(qtResults => {
                                     if (qtResults && qtResults.length>0) {
@@ -172,7 +172,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                         let quarterlyTarget = qtResult.get('totalAmount');
                                         let qtrStart = result.get('minstart');
                                         let qtrEnd = result.get('maxend');
-                                        console.log('findQuarterlyTarget result: ' + qtResult);
+                                        console.log('findQuarterlyTarget result: ' + JSON.stringify(qtResult));
                                         salesforce.findPeriodClosed({ minstart: qtrStart, maxend: qtrEnd })
                                             .then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
@@ -183,13 +183,12 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                     let text = 'For this week of the quarter, the team is ';
                                                     text += ` ${weeklyMiss} off of the pace and ${quarterlyMiss} `;
                                                     text += ' below the end of quarter target';
-                                                    console.log('findQuarterlyClosed result: ' + qcResult);
+                                                    console.log('findQuarterlyClosed result: ' + JSON.stringify(qcResult));
                                                     response.say(text);
                                                 } else {
                                                     response.say(`Sorry, I couldn't find any closed data`);
                                                 }
                                             });
-                                        response.say(text);
                                     } else {
                                         response.say(`Sorry, I couldn't find any closed data`);
                                     }
@@ -198,7 +197,6 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                             response.say(`Sorry, I couldn't find any target data`);
                         }
                     });
-                response.say(text);
             } else {
                 response.say(`Sorry, I couldn't find any target data`);
             }
