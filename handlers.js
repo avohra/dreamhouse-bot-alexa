@@ -7,9 +7,8 @@ let salesforce = require("./salesforce"),
 
 let getValue = (slot) => {
     if (slot.resolutions) {
-        console.log("id",resolutions.resolutionsPerAuthority[0].values[0].value.id)
-        return resolutions.resolutionsPerAuthority[0].values[0].value.id;
-
+        console.log("id",slot.resolutions.resolutionsPerAuthority[0].values[0].value.id)
+          return resolutions.resolutionsPerAuthority[0].values[0].value.id;
     }
     else
         return slot.value
