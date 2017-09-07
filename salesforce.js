@@ -138,7 +138,7 @@ let findPeriodClosed = (params) => {
 }
 
 let aggregateOpportunities = (params) => {
-    return filterOpportunities(params, 'Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount');
+    return filterOpportunities(params, 'Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount, Unique(Owner.Name) repCount');
 }
 
 

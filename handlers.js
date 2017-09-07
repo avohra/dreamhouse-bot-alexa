@@ -59,7 +59,7 @@ let CountDeals = (slots, session, response, dialogState) => {
              } else if (!isNaN(params.gte)) {
                 text += ` above and inclusive of $${params.gte}`;
              }
-             text += `, <break time="0.5s" /> totaling ${result.get('expr1')}, <break time="0.5s" /> assigned to ${result.get('expr2')} reps.`;
+             text += `, <break time="0.5s" /> totaling ${result.get('oppCount')}, <break time="0.5s" /> assigned to ${result.get('repCount')} reps.`;
              response.say(text);
          } else {
              response.say(`Sorry, I didn't find any open deals`);
