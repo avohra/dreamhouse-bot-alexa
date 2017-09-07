@@ -138,9 +138,13 @@ let findPeriodClosed = (params) => {
         if (parts.length>0) {
             where = "WHERE " + parts.join(' AND ');
         }
+
+        if (params.groupByRep) {
+            group = 'GROUP BY owner.name';
+        }
     }
     return new Promise((resolve, reject) => {
-        let q = `select SUM(amount) total from opportunity ${where} ${group}`;
+        let q = `select SUM(amount) total, MIN(owner.name) owner from opportunity ${where} ${group}`;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -215,7 +219,7 @@ let aggregateTargets = (params) => {
                      Count(Name) targetCount,
                      MIN(ssi_zth__start_date__c) minstart, 
                      MAX(ssi_zth__end_date__c) maxend,
-                     SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name
+                     MIN(SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name) employee
                  FROM SSI_ZTH__Sales_Target_Line_Item__c`;
         if (clause.length)
             q = q + ' WHERE ' + clause.join(' AND ');
