@@ -35,7 +35,7 @@ let doUntilComplete = (fn, slots, session, response, dialogState) => {
 }
 
 let CountDeals = (slots, session, response, dialogState) => {
-    let params = { 
+    var params = { 
         "!salesStage": ['House Account', 'Closed Sale', 'No Service']
     };
     if (!isNaN(slots.LessThan.value))
