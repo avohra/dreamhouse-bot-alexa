@@ -328,7 +328,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
     });    
 }
 let WhatShouldIDo = (slots, session, response, dialogState) => {
-    response.say('Get your shit done!')
+    response.say('Just fʌkɪŋ close it!');
 }
 
 exports.FindTopDeals = _.wrap(FindTopDeals, doUntilComplete);
