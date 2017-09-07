@@ -138,7 +138,9 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 minstart = null,
                 maxend = null;
             targets.forEach(function(target) {
-                let rep = target.get('SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name');
+                console.log('laggardTarget: ' + JSON.stringify(target));
+                let parent = target.get('SSI_ZTH__Sales_Target__r')
+                let rep = parent.SSI_ZTH__Employee__r.Name;
                 let start = target.get('minstart');
                 let end = target.get('maxend');
                 if (!minstart || Date(start) < Date(minstart)) {
@@ -159,7 +161,8 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 if (results && results.length) {
                     console.log('findLaggardClosed: ' + JSON.stringify(results));
                     results.forEach(function(result) {
-                        let rep = result.get('owner.name');
+                        let owner = result.get('owner');
+                        let rep = owner.name;
                         let closed = result.get('total');
                         let repTarget = sortedReps[rep];
                         if (!repTarget) return;
