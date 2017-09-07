@@ -97,28 +97,78 @@ let ImproveResRate = (slots, session, response, dialogState) => {
         });
     });
 }
+
 let LaggardRep= (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    salesforce.aggregateTargets({ groupByRep: true, dayInRange: 'TODAY' }).then(targets => {
+        if (targets && targets.length) {
+            let sortedReps = {},
+                minstart = null,
+                maxend = null;
+            targets.forEach(function(target) {
+                let rep = target.get('SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name');
+                let start = target.get('minstart');
+                let end = target.get('maxend');
+                if (!minstart || Date(start) < Date(minstart)) {
+                    minstart = start;
+                }
+                if (!maxend || Date(end) < Date(maxend)) {
+                    maxend = end;
+                }
+                sortedReps[rep] = {
+                    start: start,
+                    end: end,
+                    target: target.get('totalAmount')
+                };
+            });
+            salesforce.findPeriodClosed({ groupByRep: true, minstart: minstart, maxend: maxend }).then(results => {
+                let maxGap = 0,
+                    laggard = null,
+                if (results && results.length) {
+                    results.forEach(function(result)) {
+                        let rep = result.get('owner.name');
+                        let closed = result.get('total);
+                        let repTarget = sortedReps[rep];
+                        if (!repTarget) return;
+                        repTarget.gap = repTarget.target - result.get('total');
+                        if (!laggard || repTarget.gap > maxGap) {
+                            laggard = rep;
+                            maxGap = repTarget.gap;
+                        }
+                    }
+                    response.say(`${laggard} is the furthest from target this week at ${maxGap} below`);
+                }
+                else
+                    response.say('Sorry, there was nothing closed in order to determine worst performing rep.');
+            });
+        }
+        else
+            response.say('Sorry, there were no targets to find the worst performing rep');
+    }).catch((err) => {
+        console.error(err);
+        response.say("Oops. Something went wrong");
+    });   
 }
+
 let QuarterlyProgress = (slots, session, response, dialogState) => {
-    salesforce.findWeeklyTarget({})
+    salesforce.aggregateTargets({ dayInRange: 'TODAY' })
         .then(results => {
             if (results && results.length>0) {
                 let result = results[0];
                 console.log('findWeeklyTarget result: ' + result);
                 let minstart = result.get('minstart');
                 let maxend = result.get('maxend');
-                let weeklyTarget = result.get('total');
+                let weeklyTarget = result.get('totalAmount');
                 salesforce.findPeriodClosed({ minstart: minstart, maxend: maxend })
                     .then(closedResults => {
                         if (closedResults && closedResults.length>0) {
                             let closedResult = closedResults[0];
                             let weeklyClosed = closedResult.get('total');
-                            salesforce.findQuarterlyTarget({ minstart: minstart, maxend: maxend })
+                            // TODO: Replace the period name with current one
+                            salesforce.aggregateTargets({ period: '2016-Q1' })
                                 .then(qtResults => {
                                     if (qtResults && qtResults.length>0) {
                                         let qtResult = qtResults[0];
-                                        let quarterlyTarget = qtResult.get('total');
+                                        let quarterlyTarget = qtResult.get('totalAmount');
                                         let qtrStart = result.get('minstart');
                                         let qtrEnd = result.get('maxend');
                                         salesforce.findPeriodClosed({ minstart: qtrStart, maxend: qtrEnd })

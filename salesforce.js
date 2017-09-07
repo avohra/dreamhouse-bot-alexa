@@ -122,29 +122,10 @@ let findContacts = (params) => {
     });
 }
 
-let findWeeklyTarget = (params) => {
-    console.log("Find total target for this week");
-    return new Promise((resolve, reject) => {
-        let q = `select MIN(ssi_zth__start_date__c) minstart, 
-                    MAX(ssi_zth__end_date__c) maxend, 
-                    SUM(ssi_zth__target__c) total
-                FROM ssi_zth__sales_target_line_item__c
-                WHERE ssi_zth__start_date__c <= TODAY 
-                    AND ssi_zth__end_date__c >= TODAY`;
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-};
-
 let findPeriodClosed = (params) => {
     console.log("Find total amount closed for period between " + params.minstart + " and " + params.maxend);
     let where = "";
+    let group = "";
     if (params) {
         let parts = [];
         if (params.minstart && params.minstart != '') {
@@ -159,7 +140,7 @@ let findPeriodClosed = (params) => {
         }
     }
     return new Promise((resolve, reject) => {
-        let q = `select SUM(amount) total from opportunity ${where}`;
+        let q = `select SUM(amount) total from opportunity ${where} ${group}`;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -170,24 +151,6 @@ let findPeriodClosed = (params) => {
         });
     });
 }
-
-let findQuarterlyTarget = (params) => {
-    console.log("Find total target for this quarter");
-    return new Promise((resolve, reject) => {
-        // TODO: Replace the period name with current one
-        let q = `select SUM(ssi_zth__target__c) total
-                FROM ssi_zth__sales_target_line_item__c
-                WHERE SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__r.name = '2016-Q1'`;
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-};
 
 let aggregateOpportunities = (params) => {
     console.log("Aggregate opps " + params);
@@ -229,6 +192,7 @@ let aggregateOpportunities = (params) => {
 let aggregateTargets = (params) => {
     console.log("Aggregate targets " + params);
     let clause = [];
+    let group = '';
     if (params) {
         if (params.salesRep)
             clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${params.salesRep}%'`);
@@ -238,12 +202,24 @@ let aggregateTargets = (params) => {
             clause.push(`SSI_ZTH__Start_Date__c >= ${params.periodStart}`);
         if (params.periodEnd)
             clause.push(`SSI_ZTH__Start_Date__c < ${params.periodEnd}`);
+        if (params.dayInRange) {
+            clause.push(`SSI_ZTH__Start_Date__c <= ${params.dayInRange}`);
+            clause.push(`SSI_ZTH__End_Date__c >= ${params.dayInRange}`);
+        }
+        if (params.groupByRep) {
+            group = ' GROUP BY SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name';
+        }
     }
     return new Promise((resolve, reject) => {
-        var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) targetCount
+        var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount,
+                     Count(Name) targetCount,
+                     MIN(ssi_zth__start_date__c) minstart, 
+                     MAX(ssi_zth__end_date__c) maxend,
+                     SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name
                  FROM SSI_ZTH__Sales_Target_Line_Item__c`;
         if (clause.length)
             q = q + ' WHERE ' + clause.join(' AND ');
+        q += group;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -275,24 +251,15 @@ let findPeriod = (params) => {
     });
 }
 
+
 login();
 
 exports.org = org;
 exports.countOpportunities = countOpportunities;
 exports.findOpportunities = findOpportunities;
 exports.findContacts = findContacts;
-exports.findWeeklyTarget = findWeeklyTarget;
 exports.findPeriodClosed = findPeriodClosed;
-exports.findQuarterlyTarget = findQuarterlyTarget;
 
 exports.aggregateOpportunities = aggregateOpportunities;
 exports.aggregateTargets = aggregateTargets;
 exports.findPeriod = findPeriod;
-
-
-
-
-
-
-
-
