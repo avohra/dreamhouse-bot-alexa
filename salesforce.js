@@ -189,12 +189,26 @@ let findQuarterlyTarget = (params) => {
     });
 };
 
-let availableOpportunities = (params) => {
-    console.log("Available opps " + params);
+let aggregateOpportunities = (params) => {
+    console.log("Aggregate opps " + params);
+    let clause = [];
+    if (params) {
+        if (params.salesRep)
+            clause.push(`Owner.Name like '${params.salesRep}%'`);
+        if (params.periodStart)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.periodStart}`)
+        if (params.periodEnd)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.periodEnd}`)
+        if(params.salesStage)
+            clause.push(`StageName IN ('${params.salesStage.join(',')}')`)
+        if(params['!salesStage'])
+            clause.push(`StageName NOT IN ('${params.salesStage.join(',')}')`)
+    }
     return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(Amount), Sum(ServiceSource1__REN_Renewal_Target__c)
-                 FROM Opportunity
-                 WHERE StageName NOT IN ('House Account') AND Owner.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) count
+                 FROM Opportunity`;
+        if (clause.length)
+            q = q + 'WHERE ' + clause.join(' AND ');
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -206,47 +220,46 @@ let availableOpportunities = (params) => {
     });
 }
 
-let resolvedOpportunities = (params) => {
-    console.log("Resolved opps " + params);
-    return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(Amount), Sum(ServiceSource1__REN_Renewal_Target__c)
-                 FROM Opportunity
-                 WHERE StageName IN ('Closed Sale', 'No Service') AND Owner.Name like '${process.env.SF_SALES_REP_NAME}%'`;
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-}
 
 
-let closedOpportunities = (params) => {
-    console.log("Closed opps " + params);
-    return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(Amount), Sum(ServiceSource1__REN_Renewal_Target__c)
-                 FROM Opportunity
-                 WHERE StageName = 'Closed Sale' AND Owner.Name like '${process.env.SF_SALES_REP_NAME}%'`;
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-}
-
-let targetAsOf = (params) => {
+let aggregateTargets = (params) => {
     console.log("Aggregate targets " + params);
+    let clause = [];
+    if (params) {
+        if (params.salesRep)
+            clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${params.salesRep}%'`);
+        if (params.period)
+            clause.push(`SSI_ZTH__Period__c`);
+        if (params.periodStart)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.periodStart}`);
+        if (params.periodEnd)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.periodEnd}`);
+    }
     return new Promise((resolve, reject) => {
-        let q = `SELECT Sum(SSI_ZTH__Target__c)
-                 FROM SSI_ZTH__Sales_Target_Line_Item__c
-                 WHERE SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${process.env.SF_SALES_REP_NAME}%'`;
+        var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) Name
+                 FROM SSI_ZTH__Sales_Target_Line_Item__c`;
+        if (clause.length)
+            q = q + 'WHERE ' + clause.join(' AND ');
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
+
+let findPeriod = (params) => {
+    console.log("find period " + params);
+    var where = ''; 
+    if (params && params.period)
+        where =`WHERE Name = '${params.period}'`
+    return new Promise((resolve, reject) => {
+        let q = `SELECT Name, SSI_ZTH__Period_Start_Date__c, SSI_ZTH__Period_End_Date__c
+                 FROM SSI_ZTH__Period__c
+                 ${where}`;
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -267,10 +280,10 @@ exports.findContacts = findContacts;
 exports.findWeeklyTarget = findWeeklyTarget;
 exports.findPeriodClosed = findPeriodClosed;
 exports.findQuarterlyTarget = findQuarterlyTarget;
-exports.availableOpportunities = availableOpportunities;
-exports.closedOpportunities = closedOpportunities;
-exports.resolvedOpportunities = resolvedOpportunities;
-exports.targetAsOf = targetAsOf;
+
+exports.aggregateOpportunities = aggregateOpportunities;
+exports.aggregateTargets = aggregateTargets;
+exports.findPeriod = findPeriod;
 
 
 

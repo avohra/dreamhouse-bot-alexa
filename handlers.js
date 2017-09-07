@@ -1,7 +1,9 @@
 "use strict";
 
-let salesforce = require("./salesforce");
-let _ = require("underscore");
+let salesforce = require("./salesforce"),
+    _ = require("underscore"),
+    SF_SALES_REP_NAME = process.env.SF_SALES_REP_NAME,
+    SF_CURRENT_PERIOD = process.env.SF_CURRENT_PERIOD_NAME;
 
 let verbalizeOpportunites = (opps) => { 
    var text = "";
@@ -163,14 +165,32 @@ let RequestUpdate = (slots, session, response, dialogState) => {
     });    
 }
 let SalesRepProgress = (slots, session, response, dialogState) => {
-    Promise.all([salesforce.availableOpportunities(), salesforce.closedOpportunities(), salesforce.resolvedOpportunities()]).then(values => { 
-        let resRate = (values[2][0].get('expr1')/values[0][0].get('expr1')*100).toFixed(2),
-            convRate = (values[1][0].get('expr0')/values[1][0].get('expr1')*100).toFixed(2);
-        response.say(`You are $0 below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
-    }).catch((err) => {
-        console.error(err);
-        response.say("Oops. Something went wrong");
-    });     
+    salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
+        let params = { 
+            periodStart: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
+            periodEnd: periods[0].get('SSI_ZTH__Period_End_Date__c'), 
+            salesRep: SF_SALES_REP_NAME 
+        };
+        Promise.all([
+            salesforce.aggregateOpportunities({ 
+                salesRep: SF_SALES_REP_NAME,
+                '!salesStage': ['House Account'] 
+            }), 
+            salesforce.aggregateOpportunities(_.extend({ 
+                salesStage: ['Closed Sale']
+            }, params), 
+            salesforce.aggregateOpportunities(_.extend({ 
+                salesStage: ['Closed Sale', 'No Service']
+            }, params)
+        ]).then(values => { 
+            let resRate = (values[2][0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
+                    convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2);
+                response.say(`You are $0 below target for the week and your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both significantly below the team average.`);
+            }).catch((err) => {
+                console.error(err);
+                response.say("Oops. Something went wrong");
+            });     
+    });    
 }
 
 exports.FindTopDeals = _.wrap(FindTopDeals, doUntilComplete);
