@@ -141,8 +141,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 maxend = null;
             targets.forEach(function(target) {
                 console.log('laggardTarget: ' + JSON.stringify(target));
-                let parent = target.get('SSI_ZTH__Sales_Target__r')
-                let rep = parent.SSI_ZTH__Employee__r.Name;
+                let rep = target.get('employee')
                 let start = target.get('minstart');
                 let end = target.get('maxend');
                 if (!minstart || Date(start) < Date(minstart)) {

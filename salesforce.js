@@ -162,7 +162,7 @@ let aggregateTargets = (params) => {
             clause.push(`SSI_ZTH__End_Date__c >= ${params.dayInRange}`);
         }
         if (params.groupByRep) {
-            moreFields = ', SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name ';
+            moreFields = ', SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name employee ';
             group = ' GROUP BY SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name';
         }
     }
@@ -171,7 +171,7 @@ let aggregateTargets = (params) => {
                      Count(Name) targetCount,
                      MIN(ssi_zth__start_date__c) minstart, 
                      MAX(ssi_zth__end_date__c) maxend
-                     ${moreFields} employee
+                     ${moreFields}
                  FROM SSI_ZTH__Sales_Target_Line_Item__c`;
         if (clause.length)
             q = q + ' WHERE ' + clause.join(' AND ');
