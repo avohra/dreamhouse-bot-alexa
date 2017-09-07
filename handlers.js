@@ -6,7 +6,7 @@ let salesforce = require("./salesforce"),
     SF_CURRENT_PERIOD = process.env.SF_CURRENT_PERIOD_NAME;
 
 let verbalizeOpportunites = (opps) => { 
-   var text = "";
+    var text = "";
     opps.forEach(opp => {
         text += `${opp.get("account").Name.replace("&", "&amp;")} for $${opp.get("amount")} assigned to ${opp.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
     });
@@ -27,8 +27,11 @@ let doUntilComplete = (fn, slots, session, response, dialogState) => {
 }
 
 let CountDeals = (slots, session, response, dialogState) => {
-    let bottom = slots.Bottom.value;
-    salesforce.countOpportunities({bottom: bottom })
+    let params = { 
+        "!salesStage": ['House Account', 'Closed Sale', 'No Service']
+        gtAmount: slots.Bottom.value
+    };
+    salesforce.aggregateOpportunities(params)
         .then(opps => {
          if (opps && opps.length>0) {
              let text,
@@ -51,7 +54,15 @@ let CountDeals = (slots, session, response, dialogState) => {
 }
 
 let FindTopDeals = (slots, session, response, dialogState) => {
-    salesforce.findOpportunities({region: slots.OppRegion.value, sort: slots.OppSort.value })
+    let params = { 
+        "!salesStage": ['House Account', 'Closed Sale', 'No Service']
+        region: slots.OppRegion.value
+        sort: {
+            field: slots.OppSort.value,
+            order: "DESC"
+        }
+    };
+    salesforce.findOpportunities(params)
         .then(opps => {
             if (opps && opps.length>0) {
                 let text = `OK, here are your top 3 deals for ${slots.OppRegion.value}: `;
@@ -80,14 +91,35 @@ let EmailRep = (slots, session, response, dialogState) => {
     
 }
 let ImproveConvRate = (slots, session, response, dialogState) => {
-    response.say("Not Implemented");
+    salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
+        let params = { 
+            "!salesStage": ['House Account', 'Closed Sale', 'No Service'], 
+            salesRep: SF_SALES_REP_NAME,
+            sort: {
+                field: 'account',
+                order: 'DESC'
+            },
+            expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c')
+        };
+        salesforce.findOpportunities(params).then(opps => {
+            if (opps && opps.length) {
+                var text = 'To improve your conversion rate, you should look for upsell and cross sell potential in your open opportunities. <break time="0.5s" /> I recommend you look at these deals specifically <break time="0.5s" />';
+                opps.forEach(opp => {
+                    text += `${opp.get("account").Name.replace("&", "&amp;")} for customer ${opp.get("Account").Name}. <break time="0.5s" /> `;
+                });
+                response.say(text);
+            }   
+            else
+                response.say(`Sorry, I don't have anything that can help`);
+        });
+    });
 }
 let ImproveResRate = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
             expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
             salesRep: SF_SALES_REP_NAME,
-            salesStage: ['Contacted']
+            salesStage: ['Not Contacted']
         };
         salesforce.aggregateOpportunities(params).then(stats => {
             if (stats[0].get('oppCount') > 0)

@@ -27,82 +27,60 @@ let login = () => {
         }
     });
 };
-
+let filterOpportunities = (params, select) => {
+    let clause = [],
+        sort = [],
+        limit = -1;
+    if (params) {
+        if (params.salesRep)
+            clause.push(`Owner.Name like '${params.salesRep}%'`);
+        if (params.resolutionStart)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.resolutionStart}`)
+        if (params.resolutionEnd)
+            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.resolutionEnd}`)
+        if (params.expirationStart)
+            clause.push(`ServiceSource1__REN_Earliest_Expiration_Date__c >= ${params.expirationStart}`)
+        if (params.expirationEnd)
+            clause.push(`ServiceSource1__REN_Earliest_Expiration_Date__c < ${params.expirationEnd}`)
+        if (params.salesStage)
+            clause.push(`StageName IN ('${params.salesStage.join("','")}')`)
+        if (params['!salesStage'])
+            clause.push(`StageName NOT IN ('${params["!salesStage"].join("','")}')`)
+        if (params.ltAmount)
+            clause.push(`amount < ${params.belowAmount}`)
+        if (params.gteAmount)
+            clause.push(`amount >= ${params.aboveAmount}`)
+        if (params.gtAmount)
+            clause.push(`amount > ${params.aboveAmount}`)
+        if (params.sort)
+            sort = [params.sort.field, params.sort.order].join(' '); 
+        if (params.limit)
+            limit = params;
+        if (params.region && params.region !== 'all')
+            clause.push(`account.site = '${params.region}'`)
+    }
+    return new Promise((resolve, reject) => {
+        var q = `SELECT ${select}
+                 FROM Opportunity`;
+        if (clause.length)
+            q = q + ' WHERE ' + clause.join(' AND ');
+        if (sort.length)
+            q = q + ' ORDER BY ' + sort.join(',') + ' NULLS LAST';
+        if (limit > -1)
+            q = q + ' LIMIT ' + limit;
+        console.log('SQL: ' + q);
+        org.query({query: q}, (err, resp) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(resp.records);
+            }
+        });
+    });
+}
 let findOpportunities = (params) => {
-    console.log("Finding opportunities for " + params.region + " ordered by " + params.sort);
-    let where = "";
-    let sort = " ORDER BY ",
-        parmSort = null;
-    if (params) {
-        let parts = [];
-        if (params.region && params.region != '' && params.region != 'all') {
-            parts.push(`account.site='${params.region}'`);
-        }
-        parts.push('isclosed = false');
-        // TODO specify current quarter
-        if (parts.length>0) {
-            where = "WHERE " + parts.join(' AND ');
-        }
-        
-        parmSort = params.sort
-    }
-    if (parmSort && (parmSort.indexOf('probability') > -1 || parmSort.indexOf('close'))) {
-        sort += 'probability DESC';
-    } else {
-        sort += 'amount DESC';
-    }
-    sort += ' NULLS LAST';
-    return new Promise((resolve, reject) => {
-        let q = `SELECT id,
-                    opportunity.account.name,
-                    amount,
-                    opportunity.owner.name
-                FROM opportunity
-                ${where}
-                ${sort}
-                LIMIT 3`;
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-
-};
-
-let countOpportunities = (params) => {
-    console.log("Count deals over " + params.bottom);
-    let where = "";
-    if (params) {
-        let parts = [];
-        if (params.bottom && params.bottom != '' && !isNaN(params.bottom)) {
-            parts.push(`amount>=${params.bottom}`);
-        }
-        parts.push('isclosed = false');
-        // TODO specify current quarter
-        if (parts.length>0) {
-            where = "WHERE " + parts.join(' AND ');
-        }
-    }
-    return new Promise((resolve, reject) => {
-        let q = `SELECT COUNT(id),
-                    SUM(amount),
-                    COUNT_DISTINCT(opportunity.owner.name)
-                FROM opportunity
-                ${where}`;
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
-
+    console.log("Finding opportunities " + params);
+    return filterOpportunities(params, "opportunity.account.name, amount, opportunity.owner.name");
 };
 
 let findContacts = (params) => {
@@ -160,38 +138,7 @@ let findPeriodClosed = (params) => {
 }
 
 let aggregateOpportunities = (params) => {
-    console.log("Aggregate opps " + JSON.stringify(params));
-    let clause = [];
-    if (params) {
-        if (params.salesRep)
-            clause.push(`Owner.Name like '${params.salesRep}%'`);
-        if (params.resolutionStart)
-            clause.push(`ServiceSource1__REN_Resolution_Date__c >= ${params.resolutionStart}`)
-        if (params.resolutionEnd)
-            clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.resolutionEnd}`)
-        if (params.expirationStart)
-            clause.push(`ServiceSource1__REN_Earliest_Expiration_Date__c >= ${params.expirationStart}`)
-        if (params.expirationEnd)
-            clause.push(`ServiceSource1__REN_Earliest_Expiration_Date__c < ${params.expirationEnd}`)
-        if (params.salesStage)
-            clause.push(`StageName IN ('${params.salesStage.join("','")}')`)
-        if (params['!salesStage'])
-            clause.push(`StageName NOT IN ('${params["!salesStage"].join("','")}')`)
-    }
-    return new Promise((resolve, reject) => {
-        var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount
-                 FROM Opportunity`;
-        if (clause.length)
-            q = q + ' WHERE ' + clause.join(' AND ');
-        console.log('SQL: ' + q);
-        org.query({query: q}, (err, resp) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(resp.records);
-            }
-        });
-    });
+    return filterOpportunities(params, 'Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount');
 }
 
 
@@ -264,11 +211,9 @@ let findPeriod = (params) => {
 login();
 
 exports.org = org;
-exports.countOpportunities = countOpportunities;
 exports.findOpportunities = findOpportunities;
 exports.findContacts = findContacts;
 exports.findPeriodClosed = findPeriodClosed;
-
 exports.aggregateOpportunities = aggregateOpportunities;
 exports.aggregateTargets = aggregateTargets;
 exports.findPeriod = findPeriod;
