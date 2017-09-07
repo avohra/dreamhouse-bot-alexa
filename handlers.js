@@ -58,7 +58,7 @@ let FindTopDeals = (slots, session, response, dialogState) => {
         "!salesStage": ['House Account', 'Closed Sale', 'No Service'],
         region: slots.OppRegion.value,
         sort: {
-            field: slots.OppSort.value,
+            field: slots.OppSort.id,
             order: "DESC"
         }
     };
