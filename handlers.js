@@ -52,8 +52,12 @@ let CountDeals = (slots, session, response, dialogState) => {
                  result = opps[0];
              console.log(result.get('expr0'));
              text = `There are ${result.get('expr0')} opportunties`;
-             if (!isNaN(bottom)) {
-                 text += ` over $${bottom}`;
+             if (!isNaN(params.lt)) {
+                 text += ` below $${params.lt}`;
+             } else if (!isNaN(params.gt)) {
+                text += ` above $${params.gt}`;
+             } else if (!isNaN(params.gte)) {
+                text += ` above and inclusive of $${params.gte}`;
              }
              text += `, <break time="0.5s" /> totaling ${result.get('expr1')}, <break time="0.5s" /> assigned to ${result.get('expr2')} reps.`;
              response.say(text);
