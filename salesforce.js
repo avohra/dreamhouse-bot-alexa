@@ -53,7 +53,7 @@ let filterOpportunities = (params, select) => {
         if (params.gtAmount)
             clause.push(`amount > ${params.aboveAmount}`)
         if (params.sort)
-            sort = [params.sort.field, params.sort.order].join(' '); 
+            sort.push([params.sort.field, params.sort.order].join(' ')); 
         if (params.limit)
             limit = params;
         if (params.region && params.region !== 'all')
