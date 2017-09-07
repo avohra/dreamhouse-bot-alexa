@@ -200,9 +200,9 @@ let aggregateOpportunities = (params) => {
         if (params.periodEnd)
             clause.push(`ServiceSource1__REN_Resolution_Date__c < ${params.periodEnd}`)
         if(params.salesStage)
-            clause.push(`StageName IN ('${params.salesStage.join(',')}')`)
+            clause.push(`StageName IN ('${params.salesStage.join("','")}')`)
         if(params['!salesStage'])
-            clause.push(`StageName NOT IN ('${params["!salesStage"].join(',')}')`)
+            clause.push(`StageName NOT IN ('${params["!salesStage"].join("','")}')`)
     }
     return new Promise((resolve, reject) => {
         var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount
