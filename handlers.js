@@ -129,7 +129,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                         let closed = result.get('total');
                         let repTarget = sortedReps[rep];
                         if (!repTarget) return;
-                        repTarget.gap = repTarget.target - result.get('total');
+                        repTarget.gap = repTarget.target - closed;
                         if (!laggard || repTarget.gap > maxGap) {
                             laggard = rep;
                             maxGap = repTarget.gap;
@@ -150,14 +150,15 @@ let LaggardRep= (slots, session, response, dialogState) => {
 }
 
 let QuarterlyProgress = (slots, session, response, dialogState) => {
-    salesforce.aggregateTargets({ dayInRange: 'TODAY' })
+    // TODO: Revert dayInRange back to TODAY
+    salesforce.aggregateTargets({ dayInRange: '2016-01-06' })
         .then(results => {
             if (results && results.length>0) {
                 let result = results[0];
                 console.log('findWeeklyTarget result: ' + JSON.stringify(result));
                 let minstart = result.get('minstart');
                 let maxend = result.get('maxend');
-                let weeklyTarget = result.get('totalAmount');
+                let weeklyTarget = result.get('totalamount');
                 salesforce.findPeriodClosed({ minstart: minstart, maxend: maxend })
                     .then(closedResults => {
                         if (closedResults && closedResults.length>0) {
@@ -169,7 +170,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                 .then(qtResults => {
                                     if (qtResults && qtResults.length>0) {
                                         let qtResult = qtResults[0];
-                                        let quarterlyTarget = qtResult.get('totalAmount');
+                                        let quarterlyTarget = qtResult.get('totalamount');
                                         let qtrStart = result.get('minstart');
                                         let qtrEnd = result.get('maxend');
                                         console.log('findQuarterlyTarget result: ' + JSON.stringify(qtResult));
@@ -177,7 +178,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                             .then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
                                                     let qcResult = qcResults[0];
-                                                    let quarterlyClosed = qcResults.get('total');
+                                                    let quarterlyClosed = qcResult.get('total');
                                                     let weeklyMiss = weeklyTarget - weeklyClosed;
                                                     let quarterlyMiss = quarterlyTarget - quarterlyClosed;
                                                     let text = 'For this week of the quarter, the team is ';

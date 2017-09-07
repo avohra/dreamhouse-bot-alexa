@@ -123,7 +123,7 @@ let findContacts = (params) => {
 }
 
 let findPeriodClosed = (params) => {
-    console.log("Find total amount closed for period:" + params);
+    console.log("Find total amount closed for period:" + JSON.stringify(params));
     let where = "";
     let group = "";
     if (params) {
