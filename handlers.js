@@ -157,6 +157,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 let maxGap = 0,
                     laggard = null;
                 if (results && results.length) {
+                    console.log('findLaggardClosed: ' + JSON.stringify(results));
                     results.forEach(function(result) {
                         let rep = result.get('owner.name');
                         let closed = result.get('total');
@@ -183,7 +184,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                         }
                     }
                 });
-                response.say(`${laggard} is the furthest from target this week at ${maxGap} below`);
+                response.say(`${laggard} is the furthest from target this week at $${maxGap} below`);
             });
         }
         else
