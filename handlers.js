@@ -125,7 +125,7 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
             if (opps && opps.length) {
                 var text = 'To improve your conversion rate, you should look for upsell and cross sell potential in your open opportunities. <break time="0.5s" /> I recommend you look at these deals specifically <break time="0.5s" />';
                 opps.forEach(opp => {
-                    text += `Opportunity ${opp.get("Name").replace("&", "&amp;")} for customer ${opp.get("Account").Name}. <break time="0.5s" />  $${opp.get("amount")}`;
+                    text += `Opportunity ${opp.get("Name").replace("&", "&amp;")} for customer ${opp.get("Account").Name} worth $${opp.get("amount")} <break time="0.5s" />`;
                 });
                 response.say(text);
             }   
