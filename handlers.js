@@ -28,7 +28,7 @@ let doUntilComplete = (fn, slots, session, response, dialogState) => {
 
 let CountDeals = (slots, session, response, dialogState) => {
     let params = { 
-        "!salesStage": ['House Account', 'Closed Sale', 'No Service']
+        "!salesStage": ['House Account', 'Closed Sale', 'No Service'],
         gtAmount: slots.Bottom.value
     };
     salesforce.aggregateOpportunities(params)
