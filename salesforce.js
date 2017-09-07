@@ -208,7 +208,7 @@ let aggregateOpportunities = (params) => {
         var q = `SELECT Sum(Amount) totalAmount, Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount, Count(Name) oppCount
                  FROM Opportunity`;
         if (clause.length)
-            q = q + 'WHERE ' + clause.join(' AND ');
+            q = q + ' WHERE ' + clause.join(' AND ');
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -239,7 +239,7 @@ let aggregateTargets = (params) => {
         var q = `SELECT Sum(SSI_ZTH__Target__c) totalAmount, Count(Name) targetCount
                  FROM SSI_ZTH__Sales_Target_Line_Item__c`;
         if (clause.length)
-            q = q + 'WHERE ' + clause.join(' AND ');
+            q = q + ' WHERE ' + clause.join(' AND ');
         console.log('SQL: ' + q);
         org.query({query: q}, (err, resp) => {
             if (err) {
@@ -255,7 +255,7 @@ let findPeriod = (params) => {
     console.log("find period " + params);
     var where = ''; 
     if (params && params.period)
-        where =`WHERE Name = '${params.period}'`
+        where =` WHERE Name = '${params.period}'`
     return new Promise((resolve, reject) => {
         let q = `SELECT Name, SSI_ZTH__Period_Start_Date__c, SSI_ZTH__Period_End_Date__c
                  FROM SSI_ZTH__Period__c
