@@ -5,6 +5,16 @@ let salesforce = require("./salesforce"),
     SF_SALES_REP_NAME = process.env.SF_SALES_REP_NAME,
     SF_CURRENT_PERIOD = process.env.SF_CURRENT_PERIOD_NAME;
 
+let getValue = (slot) => {
+    if (slot.resolutions) {
+        console.log("id",resolutions.resolutionsPerAuthority[0].values[0].value.id)
+        return resolutions.resolutionsPerAuthority[0].values[0].value.id;
+
+    }
+    else
+        return slot.value
+}   
+
 let verbalizeOpportunites = (opps) => { 
     var text = "";
     opps.forEach(opp => {
@@ -59,7 +69,7 @@ let FindTopDeals = (slots, session, response, dialogState) => {
         "!salesStage": ['House Account', 'Closed Sale', 'No Service'],
         region: slots.OppRegion.value,
         sort: {
-            field: slots.OppSort.id,
+            field: getValue(slots.OppSort),
             order: "DESC"
         },
         limit: 3
