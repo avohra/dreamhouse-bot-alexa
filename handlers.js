@@ -99,7 +99,8 @@ let ImproveResRate = (slots, session, response, dialogState) => {
 }
 
 let LaggardRep= (slots, session, response, dialogState) => {
-    salesforce.aggregateTargets({ groupByRep: true, dayInRange: 'TODAY' }).then(targets => {
+    // TODO: Change dayInRange back to TODAY
+    salesforce.aggregateTargets({ groupByRep: true, dayInRange: '2016-01-06' }).then(targets => {
         if (targets && targets.length) {
             let sortedReps = {},
                 minstart = null,
