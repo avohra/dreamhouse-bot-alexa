@@ -116,7 +116,7 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
             "!salesStage": ['House Account', 'Closed Sale', 'No Service'], 
             salesRep: SF_SALES_REP_NAME,
             sort: {
-                field: 'account',
+                field: 'amount',
                 order: 'DESC'
             },
             expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c')
