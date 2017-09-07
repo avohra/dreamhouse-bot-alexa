@@ -56,7 +56,7 @@ let CountDeals = (slots, session, response, dialogState) => {
 let FindTopDeals = (slots, session, response, dialogState) => {
     let params = { 
         "!salesStage": ['House Account', 'Closed Sale', 'No Service']
-        region: slots.OppRegion.value
+        region: slots.OppRegion.value,
         sort: {
             field: slots.OppSort.value,
             order: "DESC"
