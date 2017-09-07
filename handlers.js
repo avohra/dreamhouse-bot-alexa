@@ -51,12 +51,12 @@ let CountDeals = (slots, session, response, dialogState) => {
              let text,
                  result = opps[0];
              console.log(result.get('oppCount'));
-             text = `There are ${result.get('oppCount')} opportunties`;
-             if (!isNaN(params.lt)) {
+             text = `There are ${result.get('oppCount')} open opportunties`;
+             if (_.isNumber(params.lt)) {
                  text += ` below $${params.lt}`;
-             } else if (!isNaN(params.gt)) {
+             } else if (_.isNumber(params.gt)) {
                 text += ` above $${params.gt}`;
-             } else if (!isNaN(params.gte)) {
+             } else if (_.isNumber(params.gte)) {
                 text += ` above and inclusive of $${params.gte}`;
              }
              text += `, <break time="0.5s" /> totaling $${result.get('totalAmount')}, <break time="0.5s" /> assigned to ${result.get('repCount')} reps.`;
