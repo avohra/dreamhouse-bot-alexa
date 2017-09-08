@@ -17,7 +17,7 @@ module.exports = (req, res) => {
         let outputSpeech = {};
 
         console.log("Output",text);
-        text = bleep.bleep.uncensor_line(text);
+        text = bleep.uncensor_line(text);
         if (text.indexOf("/>") > 0 || text.indexOf("</")) {
             outputSpeech.type = 'SSML';
             outputSpeech.ssml = "<speak>" + text + "</speak>";
