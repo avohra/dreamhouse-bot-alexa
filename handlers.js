@@ -39,11 +39,17 @@ let CountDeals = (slots, session, response, dialogState) => {
         "!salesStage": ['House Account', 'Closed Sale', 'No Service']
     };
     if (!isNaN(slots.LessThan.value))
-        params.lt = slots.LessThan.value;
+        params.amount = {
+            lt: slots.LessThan.value
+        }
     if  (!isNaN(slots.GreaterThan.value))
-        params.gt = slots.GreaterThan.value;
+        params.amount = {
+            gt: slots.GreaterThan.value
+        } 
     if  (!isNaN(slots.GreaterThanOrEqual.value))
-        params.gte = slots.GreaterThanOrEqual.value;
+        params.amount = { 
+            gte: slots.GreaterThanOrEqual.value
+        }
 
     salesforce.aggregateOpportunities(params)
         .then(opps => {
@@ -52,12 +58,12 @@ let CountDeals = (slots, session, response, dialogState) => {
                  result = opps[0];
              console.log(result.get('oppCount'));
              text = `There are ${result.get('oppCount')} open opportunties`;
-             if (!isNaN(params.lt)) {
-                 text += ` below $${params.lt}`;
-             } else if (!isNaN(params.gt)) {
-                text += ` above $${params.gt}`;
-             } else if (!isNaN(params.gte)) {
-                text += ` above and inclusive of $${params.gte}`;
+             if (!isNaN(params.amount.lt)) {
+                 text += ` below $${params.amount.lt}`;
+             } else if (!isNaN(params.amount.gt)) {
+                text += ` above $${params.amount.gt}`;
+             } else if (!isNaN(params.amount.gte)) {
+                text += ` above and inclusive of $${params.amount.gte}`;
              }
              text += `, <break time="0.5s" /> totaling $${result.get('totalAmount')}, <break time="0.5s" /> assigned to ${result.get('repCount')} reps.`;
              response.say(text);
@@ -119,7 +125,9 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
                 field: 'amount',
                 order: 'DESC'
             },
-            expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c')
+            expiration: {
+                lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
+            }
         };
         salesforce.findOpportunities(params).then(opps => {
             if (opps && opps.length) {
@@ -137,7 +145,9 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
 let ImproveResRate = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
-            expirationEnd: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
+            expiration: {
+                lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
+            }, 
             salesRep: SF_SALES_REP_NAME,
             salesStage: ['Not Contacted']
         };
@@ -152,7 +162,16 @@ let ImproveResRate = (slots, session, response, dialogState) => {
 
 let LaggardRep= (slots, session, response, dialogState) => {
     // TODO: Change dayInRange back to TODAY
-    salesforce.aggregateTargets({ groupByRep: true, dayInRange: '2016-01-06' }).then(targets => {
+    salesforce.aggregateTargets({ 
+            group: {
+                field: 'SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name',
+                alias: 'employee'
+            }, 
+            periodRange: {
+                lte: '2016-01-06',
+                gte: '2016-01-06'
+            }
+        }).then(targets => {
         if (targets && targets.length) {
             let sortedReps = {},
                 minstart = null,
@@ -174,7 +193,14 @@ let LaggardRep= (slots, session, response, dialogState) => {
                     target: target.get('totalAmount')
                 };
             });
-            salesforce.findPeriodClosed({ groupByRep: true, minstart: minstart, maxend: maxend }).then(results => {
+            salesforce.aggregateOpportunities({ 
+                group: {
+                    field: 'owner.name'
+                }, 
+                closeDateStart: minstart, 
+                closeDateEnd: maxend,
+                salesStage: ['Closed Sale']
+            }).then(results => {
                 let maxGap = 0,
                     laggard = null;
                 if (results && results.length) {
@@ -182,7 +208,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                     results.forEach(function(result) {
                         let owner = result.get('owner');
                         let rep = owner.name;
-                        let closed = result.get('total');
+                        let closed = result.get('totalAmount');
                         let repTarget = sortedReps[rep];
                         if (!repTarget) return;
                         repTarget.foundClosed = true;
@@ -219,7 +245,11 @@ let LaggardRep= (slots, session, response, dialogState) => {
 
 let QuarterlyProgress = (slots, session, response, dialogState) => {
     // TODO: Revert dayInRange back to TODAY
-    salesforce.aggregateTargets({ dayInRange: '2016-01-06' })
+    salesforce.aggregateTargets({ periodRange: {
+                lte: '2016-01-06',
+                gte: '2016-01-06'
+            }
+        })
         .then(results => {
             if (results && results.length>0) {
                 let result = results[0];
@@ -289,8 +319,10 @@ let RequestUpdate = (slots, session, response, dialogState) => {
 let SalesRepProgress = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
-            resolutionStart: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
-            resolutionEnd: periods[0].get('SSI_ZTH__Period_End_Date__c'), 
+            resolution: {
+                gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
+                lte: periods[0].get('SSI_ZTH__Period_End_Date__c')
+            },
             salesRep: SF_SALES_REP_NAME 
         };
         Promise.all([
@@ -305,8 +337,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 salesStage: ['Closed Sale', 'No Service']
             }, params)),
             salesforce.aggregateTargets(_.extend({
-                periodStart: params.resolutionStart,
-                periodEnd: params.resolutionEnd,
+                periodRange: params.resolution,
                 period: periods[0].get('Name')
             }, params))
         ]).then(values => { 
@@ -346,13 +377,5 @@ exports.RequestUpdate = _.wrap(RequestUpdate, doUntilComplete);
 exports.SalesRepProgress = _.wrap(SalesRepProgress, doUntilComplete);
 exports.WhatShouldIDo = WhatShouldIDo;
 exports.LongRamble = _.wrap(LongRamble, doUntilComplete);
-
-
-
-
-
-
-
-
 
 
