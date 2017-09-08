@@ -261,7 +261,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                 console.log('findWeeklyTarget result: ' + JSON.stringify(result));
                 let minstart = result.get('minstart');
                 let maxend = result.get('maxend');
-                let weeklyTarget = result.get('totalAmount');
+                let weeklyTarget = result.get('totalamount');
                 salesforce.aggregateOpportunities({ 
                     closeDate: {
                         gte: minstart, 
@@ -279,7 +279,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                 .then(qtResults => {
                                     if (qtResults && qtResults.length>0) {
                                         let qtResult = qtResults[0];
-                                        let quarterlyTarget = qtResult.get('totalA`mount');
+                                        let quarterlyTarget = qtResult.get('totalamount');
                                         let qtrStart = result.get('minstart');
                                         let qtrEnd = result.get('maxend');
                                         console.log('findQuarterlyTarget result: ' + JSON.stringify(qtResult));
@@ -293,7 +293,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                         }).then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
                                                     let qcResult = qcResults[0];
-                                                    let quarterlyClosed = qcResult.get('totalAmount');
+                                                    let quarterlyClosed = qcResult.get('totalamount');
                                                     let weeklyMiss = weeklyTarget - weeklyClosed;
                                                     let quarterlyMiss = quarterlyTarget - quarterlyClosed;
                                                     let text = 'For this week of the quarter, the team is ';
