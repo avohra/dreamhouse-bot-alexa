@@ -207,8 +207,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 if (results && results.length) {
                     console.log('findLaggardClosed: ' + JSON.stringify(results));
                     results.forEach(function(result) {
-                        let owner = result.get('owner');
-                        let rep = owner.name;
+                        let rep = result.get('name');
                         let closed = result.get('totalAmount');
                         let repTarget = sortedReps[rep];
                         if (!repTarget) return;
