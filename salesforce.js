@@ -28,7 +28,7 @@ let login = () => {
     });
 };
 
-let getRangeClause(field, range) {
+let getRangeClause = (field, range) =>{
     var clause = [];
     if (range.gte)
         clause.push(`${field} >= ${range.gte}`);
