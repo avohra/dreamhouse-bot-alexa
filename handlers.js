@@ -361,7 +361,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                     gte: params.resolutionDate.gte
                 },
                 periodEndDate: {
-                    lte: arams.resolutionDate.lte
+                    lte: params.resolutionDate.lte
                 },
                 period: periods[0].get('Name')
             }, params))
