@@ -147,7 +147,6 @@ login();
 exports.org = org;
 exports.findOpportunities = findOpportunities;
 exports.findContacts = findContacts;
-exports.findPeriodClosed = findPeriodClosed;
 exports.aggregateOpportunities = aggregateOpportunities;
 exports.aggregateTargets = aggregateTargets;
 exports.findPeriod = findPeriod;
