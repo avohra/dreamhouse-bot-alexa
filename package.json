@@ -16,6 +16,6 @@
     "nforce": "^1.4.1",
     "request": "^2.70.0",
     "underscore": "1.5.1",
-    "alexa-uncensor": "1.0.1"
+    "alexa-uncensor": "git+https://git@github.com/avohra/alexa-uncensor.git"
   }
 }
