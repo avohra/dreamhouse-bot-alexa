@@ -295,7 +295,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                     let weeklyMiss = weeklyTarget - weeklyClosed;
                                                     let quarterlyMiss = quarterlyTarget - quarterlyClosed;
                                                     let text = 'For this week of the quarter, the team is ';
-                                                    text += ` ${weeklyMiss} off of the pace and ${quarterlyMiss} `;
+                                                    text += ` $${weeklyMiss} off of the pace and $${quarterlyMiss} `;
                                                     text += ' below the end of quarter target';
                                                     console.log('findQuarterlyClosed result: ' + JSON.stringify(qcResult));
                                                     response.say(text);
