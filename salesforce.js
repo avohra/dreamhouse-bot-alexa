@@ -1,7 +1,7 @@
 "use strict";
 
 let nforce = require('nforce'),
-
+    _ = require('underscore'),
     SF_CLIENT_ID = process.env.SF_CLIENT_ID,
     SF_CLIENT_SECRET = process.env.SF_CLIENT_SECRET,
     SF_USER_NAME = process.env.SF_USER_NAME,
@@ -97,7 +97,9 @@ let filterOpportunities = (params, select) => {
         if (params.region && params.region !== 'all')
             clause.push(`SSI_ZTH__Client_Region__c = '${params.region}'`)
         if (params.closeDate)
-            clause.push(getRangeClause('closedate',params.closeDate))
+            clause.push(getRangeClause('closedate',params.closeDate));
+        if (_.has(params, 'isClosed'))
+            clause.push(`isClosed = ${params.isClosed}`);
     }
     return executeQuery(params, 'Opportunity', select, clause)
 }

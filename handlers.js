@@ -267,7 +267,8 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                         gte: minstart, 
                         lte: maxend
                     },
-                    salesStage: ['Closed Sale'] 
+                    isClosed: true
+                    //salesStage: ['Closed Sale'] 
                 }).then(closedResults => {
                         if (closedResults && closedResults.length>0) {
                             let closedResult = closedResults[0];
@@ -287,7 +288,8 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                 gte: minstart, 
                                                 lte: maxend
                                             },
-                                            salesStage: ['Closed Sale'] 
+                                            isClosed: true
+                                            //salesStage: ['Closed Sale'] 
                                         }).then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
                                                     let qcResult = qcResults[0];
