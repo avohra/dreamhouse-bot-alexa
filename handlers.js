@@ -36,7 +36,8 @@ let doUntilComplete = (fn, slots, session, response, dialogState) => {
 
 let CountDeals = (slots, session, response, dialogState) => {
     var params = { 
-        "!salesStage": ['House Account', 'Closed Sale', 'No Service']
+        "!salesStage": ['House Account', 'Closed Sale', 'No Service'],
+        select: ['Count_Distinct(Owner.Name) repCount']
     };
     if (!isNaN(slots.LessThan.value))
         params.amount = {

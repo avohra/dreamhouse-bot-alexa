@@ -54,6 +54,8 @@ let executeQuery = (params, table, select, where) => {
             group.push(params.group.field);
             select.push([params.group.field, params.group.alias || ""].join(" "));
         }
+        if (params.select)
+            select = [].concat(select,params.select);
     }
     return new Promise((resolve, reject) => {
         var q = `SELECT ${select.join(', ')}
@@ -81,7 +83,7 @@ let filterOpportunities = (params, select) => {
     var clause = [];
     if (params) {
         if (params.salesRep)
-            clause.push(`Owner.Name like '${params.salesRep}%'`);
+            clause.push(`owner.Name like '${params.salesRep}%'`);
         if (params.resolutionDate)
             clause.push(getRangeClause('ServiceSource1__REN_Resolution_Date__c', params.resolutionDate));
         if (params.expirationDate)
@@ -111,7 +113,7 @@ let findContacts = (params) => {
 }
 
 let aggregateOpportunities = (params) => {
-    return filterOpportunities(params, ['Sum(Amount) totalAmount', 'Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount', 'Count(Name) oppCount', 'Count_Distinct(Owner.Name) repCount']);
+    return filterOpportunities(params, ['Sum(Amount) totalAmount', 'Sum(ServiceSource1__REN_Renewal_Target__c) totalTargetAmount', 'Count(Name) oppCount']);
 }
 
 let aggregateTargets = (params) => {
