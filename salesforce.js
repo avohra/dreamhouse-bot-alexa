@@ -85,7 +85,7 @@ let filterOpportunities = (params, select) => {
         if (params.resolution)
             clause.push(getRangeClause('ServiceSource1__REN_Resolution_Date__c', params.resolution));
         if (params.expiration)
-            clause.push(getRangeClause('ServiceSource1__REN_Earliest_Expiration_Date', params.expiration));
+            clause.push(getRangeClause('ServiceSource1__REN_Earliest_Expiration_Date__c', params.expiration));
         if (params.salesStage)
             clause.push(`StageName IN ('${params.salesStage.join("','")}')`);
         if (params['!salesStage'])
