@@ -102,7 +102,7 @@ let filterOpportunities = (params, select) => {
 
 let findOpportunities = (params) => {
     console.log("Finding opportunities " + JSON.stringify(params));
-    return filterOpportunities(params, ['Name', 'opportunity.account.name', 'amount', 'opportunity.owner.name']);
+    return filterOpportunities(params, ['Name', 'opportunity.account.name', 'amount', 'opportunity.owner.name','ServiceSource1__REN_Earliest_Expiration_Date__c']);
 };
 
 let findContacts = (params) => {

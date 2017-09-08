@@ -16,7 +16,7 @@ let getValue = (slot) => {
 let verbalizeOpportunites = (opps) => { 
     var text = "";
     opps.forEach(opp => {
-        text += `${opp.get("account").Name.replace("&", "&amp;")} for $${opp.get("amount")} assigned to ${opp.get("owner").Name.replace("&", "&amp;")}. <break time="0.5s" /> `;
+        text += `For Customer ${opp.get("account").Name.replace("&", "&amp;")}, there is an opportunity worth $${opp.get("amount")}, assigned to ${opp.get("owner").Name.replace("&", "&amp;")}, expiring on ${opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c")}, . <break time="0.5s" /> `;
     });
     return text;
 }
