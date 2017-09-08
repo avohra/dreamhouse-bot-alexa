@@ -82,10 +82,10 @@ let filterOpportunities = (params, select) => {
     if (params) {
         if (params.salesRep)
             clause.push(`Owner.Name like '${params.salesRep}%'`);
-        if (params.resolution)
-            clause.push(getRangeClause('ServiceSource1__REN_Resolution_Date__c', params.resolution));
-        if (params.expiration)
-            clause.push(getRangeClause('ServiceSource1__REN_Earliest_Expiration_Date__c', params.expiration));
+        if (params.resolutionDate)
+            clause.push(getRangeClause('ServiceSource1__REN_Resolution_Date__c', params.resolutionDate));
+        if (params.expirationDate)
+            clause.push(getRangeClause('ServiceSource1__REN_Earliest_Expiration_Date__c', params.expirationDate));
         if (params.salesStage)
             clause.push(`StageName IN ('${params.salesStage.join("','")}')`);
         if (params['!salesStage'])
@@ -122,8 +122,10 @@ let aggregateTargets = (params) => {
             clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name like '${params.salesRep}%'`);
         if (params.period)
             clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__r.Name = '${params.period}'`);
-        if (params.periodRange)
-            clause.push(getRangeClause(`SSI_ZTH__Start_Date__c`, params.periodRange));
+        if (params.periodStartDate)
+            clause.push(getRangeClause(`SSI_ZTH__Start_Date__c`, params.periodStartDate));
+        if (params.periodEndDate)
+            clause.push(getRangeClause(`SSI_ZTH__End_Date__c`, params.periodEndDate));
     }
     return executeQuery(params, 
         'SSI_ZTH__Sales_Target_Line_Item__c', 

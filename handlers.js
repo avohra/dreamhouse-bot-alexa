@@ -125,7 +125,7 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
                 field: 'amount',
                 order: 'DESC'
             },
-            expiration: {
+            expirationDate: {
                 lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
             }
         };
@@ -143,7 +143,7 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
 let ImproveResRate = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
-            expiration: {
+            expirationDate: {
                 lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
             }, 
             salesRep: SF_SALES_REP_NAME,
@@ -165,9 +165,11 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 field: 'SSI_ZTH__Sales_Target__r.SSI_ZTH__Employee__r.Name',
                 alias: 'employee'
             }, 
-            periodRange: {
-                lte: '2016-01-06',
+            periodStartDate: {
                 gte: '2016-01-06'
+            },
+            periodEndDate: {
+                lte: '2016-01-06'
             }
         }).then(targets => {
         if (targets && targets.length) {
@@ -243,9 +245,12 @@ let LaggardRep= (slots, session, response, dialogState) => {
 
 let QuarterlyProgress = (slots, session, response, dialogState) => {
     // TODO: Revert dayInRange back to TODAY
-    salesforce.aggregateTargets({ periodRange: {
-                lte: '2016-01-06',
+    salesforce.aggregateTargets({ 
+            periodStartDate: {
                 gte: '2016-01-06'
+            },
+            periodEndDate: {
+                lte: '2016-01-06'
             }
         })
         .then(results => {
@@ -317,7 +322,7 @@ let RequestUpdate = (slots, session, response, dialogState) => {
 let SalesRepProgress = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
-            resolution: {
+            resolutionDate: {
                 gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
                 lte: periods[0].get('SSI_ZTH__Period_End_Date__c')
             },
@@ -335,7 +340,12 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 salesStage: ['Closed Sale', 'No Service']
             }, params)),
             salesforce.aggregateTargets(_.extend({
-                periodRange: params.resolution,
+                periodStartDate: {
+                    gte: params.resolutionDate.gte
+                },
+                periodEndDate: {
+                    lte: arams.resolutionDate.lte
+                },
                 period: periods[0].get('Name')
             }, params))
         ]).then(values => { 
