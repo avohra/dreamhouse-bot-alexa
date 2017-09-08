@@ -129,7 +129,7 @@ let aggregateTargets = (params) => {
         'SSI_ZTH__Sales_Target_Line_Item__c', 
         ['Sum(SSI_ZTH__Target__c) totalAmount',
          'Count(Name) targetCount',
-         'MIN(ssi_zth__start_date__c) minstart', \
+         'MIN(ssi_zth__start_date__c) minstart', 
          'MAX(ssi_zth__end_date__c) maxend'], clause);
 }
 
