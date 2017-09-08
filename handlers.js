@@ -291,7 +291,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                         }).then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
                                                     let qcResult = qcResults[0];
-                                                    let quarterlyClosed = qcResult.get('total');
+                                                    let quarterlyClosed = qcResult.get('totalAmount');
                                                     let weeklyMiss = weeklyTarget - weeklyClosed;
                                                     let quarterlyMiss = quarterlyTarget - quarterlyClosed;
                                                     let text = 'For this week of the quarter, the team is ';
