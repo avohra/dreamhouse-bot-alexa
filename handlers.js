@@ -331,6 +331,10 @@ let WhatShouldIDo = (slots, session, response, dialogState) => {
     response.say("Stop screwing around and just fucking close it!");
 }
 
+let LongRamble = (slots, session, response, dialogState) => {
+    response.say("I don't know about that");
+}
+
 exports.FindTopDeals = _.wrap(FindTopDeals, doUntilComplete);
 exports.CountDeals = _.wrap(CountDeals, doUntilComplete);
 exports.EmailRep = _.wrap(EmailRep, doUntilComplete);
@@ -341,6 +345,7 @@ exports.QuarterlyProgress = _.wrap(QuarterlyProgress, doUntilComplete);
 exports.RequestUpdate = _.wrap(RequestUpdate, doUntilComplete);
 exports.SalesRepProgress = _.wrap(SalesRepProgress, doUntilComplete);
 exports.WhatShouldIDo = WhatShouldIDo;
+exports.LongRamble = _.wrap(LongRamble, doUntilComplete);
 
 
 
