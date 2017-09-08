@@ -59,7 +59,7 @@ let executeQuery = (params, table, select, where) => {
         var q = `SELECT ${select.join(', ')}
                  FROM ${table}`;
         if (where.length)
-            q = q + ' WHERE ' + clause.join(' AND ');
+            q = q + ' WHERE ' + where.join(' AND ');
         if (group.length)
              q = q + ' GROUP BY ' + group.join(', ');
         if (sort.length)
