@@ -275,7 +275,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                 }).then(closedResults => {
                         if (closedResults && closedResults.length>0) {
                             let closedResult = closedResults[0];
-                            let weeklyClosed = closedResult.get('total');
+                            let weeklyClosed = closedResult.get('totalamount');
                             // TODO: Replace the period name with current one
                             console.log('findWeeklyClosed result: ' + JSON.stringify(closedResult));
                             salesforce.aggregateTargets({ period: '2016-Q1' })
