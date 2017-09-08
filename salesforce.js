@@ -123,7 +123,7 @@ let aggregateTargets = (params) => {
         if (params.period)
             clause.push(`SSI_ZTH__Sales_Target__r.SSI_ZTH__Period__r.Name = '${params.period}'`);
         if (params.periodRange)
-            clause.push(getRangeClause(`SSI_ZTH__Start_Date__c`, periodRange));
+            clause.push(getRangeClause(`SSI_ZTH__Start_Date__c`, params.periodRange));
     }
     return executeQuery(params, 
         'SSI_ZTH__Sales_Target_Line_Item__c', 
