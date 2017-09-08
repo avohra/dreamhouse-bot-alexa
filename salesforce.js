@@ -83,7 +83,7 @@ let filterOpportunities = (params, select) => {
         if (params.salesRep)
             clause.push(`Owner.Name like '${params.salesRep}%'`);
         if (params.resolution)
-            clause.push(getRangeClause('ServiceSource1__REN_Resolution_Date__c'), params.resolution));
+            clause.push(getRangeClause('ServiceSource1__REN_Resolution_Date__c', params.resolution));
         if (params.expiration)
             clause.push(getRangeClause('ServiceSource1__REN_Earliest_Expiration_Date', params.expiration));
         if (params.salesStage)
