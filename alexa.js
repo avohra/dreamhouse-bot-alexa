@@ -1,4 +1,5 @@
 
+var bleep = require("alexa-uncensor");
 module.exports = (req, res) => {
 
     let session = req.body.session,
@@ -16,7 +17,7 @@ module.exports = (req, res) => {
         let outputSpeech = {};
 
         console.log("Output",text);
-
+        text = bleep.bleep.uncensor_line(text);
         if (text.indexOf("/>") > 0 || text.indexOf("</")) {
             outputSpeech.type = 'SSML';
             outputSpeech.ssml = "<speak>" + text + "</speak>";

@@ -1,7 +1,6 @@
 "use strict";
 
 let salesforce = require("./salesforce"),
-    bleep = require("alexa-uncensor"),
     _ = require("underscore"),
     SF_SALES_REP_NAME = process.env.SF_SALES_REP_NAME,
     SF_CURRENT_PERIOD = process.env.SF_CURRENT_PERIOD_NAME;
@@ -329,7 +328,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
     });    
 }
 let WhatShouldIDo = (slots, session, response, dialogState) => {
-    response.say(bleep.uncensor_line("Stop fucking around and just close it!"));
+    response.say("Stop screwing around and just close it!");
 }
 
 exports.FindTopDeals = _.wrap(FindTopDeals, doUntilComplete);
