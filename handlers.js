@@ -198,8 +198,10 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 group: {
                     field: 'owner.name'
                 }, 
-                closeDateStart: minstart, 
-                closeDateEnd: maxend,
+                closeDate: {
+                    gte: minstart, 
+                    lte: maxend
+                }
                 salesStage: ['Closed Sale']
             }).then(results => {
                 let maxGap = 0,
@@ -260,8 +262,13 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                 let minstart = result.get('minstart');
                 let maxend = result.get('maxend');
                 let weeklyTarget = result.get('totalamount');
-                salesforce.findPeriodClosed({ minstart: minstart, maxend: maxend })
-                    .then(closedResults => {
+                salesforce.aggregateOpportunities({ 
+                    closeDate: {
+                        gte: minstart, 
+                        lte: maxend
+                    },
+                    salesStage: ['Closed Sale'] 
+                }).then(closedResults => {
                         if (closedResults && closedResults.length>0) {
                             let closedResult = closedResults[0];
                             let weeklyClosed = closedResult.get('total');
