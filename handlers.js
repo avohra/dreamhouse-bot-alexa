@@ -282,8 +282,13 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                         let qtrStart = result.get('minstart');
                                         let qtrEnd = result.get('maxend');
                                         console.log('findQuarterlyTarget result: ' + JSON.stringify(qtResult));
-                                        salesforce.findPeriodClosed({ minstart: qtrStart, maxend: qtrEnd })
-                                            .then(qcResults => {
+                                        salesforce.aggregateOpportunities({ 
+                                            closeDate: {
+                                                gte: minstart, 
+                                                lte: maxend
+                                            },
+                                            salesStage: ['Closed Sale'] 
+                                        }).then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
                                                     let qcResult = qcResults[0];
                                                     let quarterlyClosed = qcResult.get('total');
