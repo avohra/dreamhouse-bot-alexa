@@ -249,10 +249,10 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
     // TODO: Revert dayInRange back to TODAY
     salesforce.aggregateTargets({ 
             periodStartDate: {
-                gte: '2016-01-06'
+                lte: '2016-01-06'
             },
             periodEndDate: {
-                lte: '2016-01-06'
+                gte: '2016-01-06'
             }
         })
         .then(results => {
