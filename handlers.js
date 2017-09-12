@@ -349,7 +349,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             salesforce.aggregateOpportunities({ 
                 salesRep: SF_SALES_REP_NAME,
                 '!salesStage': ['House Account'],
-                closedDate: {
+                closeDate: {
                     gte: '2017-04-01',
                     lt : '2018-01-01'
                 }
