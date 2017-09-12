@@ -288,8 +288,8 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                         console.log('findQuarterlyTarget result: ' + JSON.stringify(qtResult));
                                         salesforce.aggregateOpportunities({ 
                                             closeDate: {
-                                                gte: minstart, 
-                                                lte: maxend
+                                                gte: qtrStart, 
+                                                lte: qtrEnd
                                             }
                                             //isClosed: true
                                             //salesStage: ['Closed Sale'] 
