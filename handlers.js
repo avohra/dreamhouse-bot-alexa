@@ -283,8 +283,8 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                     if (qtResults && qtResults.length>0) {
                                         let qtResult = qtResults[0];
                                         let quarterlyTarget = qtResult.get('totalamount');
-                                        let qtrStart = result.get('minstart');
-                                        let qtrEnd = result.get('maxend');
+                                        let qtrStart = qtResult.get('minstart');
+                                        let qtrEnd = qtResult.get('maxend');
                                         console.log('findQuarterlyTarget result: ' + JSON.stringify(qtResult));
                                         salesforce.aggregateOpportunities({ 
                                             closeDate: {
