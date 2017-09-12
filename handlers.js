@@ -359,7 +359,8 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 '!salesStage': ['House Account']
             }, params)), 
             salesforce.aggregateOpportunities(_.extend({ 
-                salesStage: ['Closed Sale', 'No Service']
+                //salesStage: ['Closed Sale', 'No Service']
+                '!salesStage': ['House Account']
             }, params)),
             salesforce.aggregateTargets(_.extend({
                 periodStartDate: {
