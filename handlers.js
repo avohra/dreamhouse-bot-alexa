@@ -341,7 +341,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
         let params = { 
             closeDate: {
                 gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
-                lte: 'TODAY'
+                lte: periods[0].get('SSI_ZTH__Period_End_Date__c')
             },
             salesRep: SF_SALES_REP_NAME 
         };
@@ -367,7 +367,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                     gte: params.closeDate.gte
                 },
                 periodEndDate: {
-                    lte: params.closeDate.lte
+                    lte: 'TODAY'
                 },
                 period: periods[0].get('Name')
             }, params))
