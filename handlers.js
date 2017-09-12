@@ -341,7 +341,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
         let params = { 
             closeDate: {
                 gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
-                lt: 'TODAY'
+                lte: 'TODAY'
             },
             salesRep: SF_SALES_REP_NAME 
         };
