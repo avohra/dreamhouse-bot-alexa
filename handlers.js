@@ -269,8 +269,8 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                     closeDate: {
                         gte: minstart, 
                         lte: maxend
-                    },
-                    isClosed: true
+                    }
+                    //isClosed: true
                     //salesStage: ['Closed Sale'] 
                 }).then(closedResults => {
                         if (closedResults && closedResults.length>0) {
@@ -290,8 +290,8 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                             closeDate: {
                                                 gte: minstart, 
                                                 lte: maxend
-                                            },
-                                            isClosed: true
+                                            }
+                                            //isClosed: true
                                             //salesStage: ['Closed Sale'] 
                                         }).then(qcResults => {
                                                 if (qcResults && qcResults.length>0) {
