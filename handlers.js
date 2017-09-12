@@ -384,7 +384,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2),
                 gap = values[3][0].get('totalAmount') - values[4][0].get('totalAmount');
                 
-                console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount'), ,"Closed Amount For Week: ",values[4][0].get('totalAmount') );
+                console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount') ,"Closed Amount For Week: ",values[4][0].get('totalAmount') );
 
                 if (gap == 0)
                     response.say(`You're OK. <break time="0.5s" /> Your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both about the same as the team average.`);
