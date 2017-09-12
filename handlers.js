@@ -371,7 +371,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 },
                 period: periods[0].get('Name')
             }, params)),
-            salesforce.aggregateOpportunities(_.default({ 
+            salesforce.aggregateOpportunities(_.defaults({ 
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account'],
                 closeDate: {
