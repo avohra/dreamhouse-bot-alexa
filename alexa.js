@@ -18,6 +18,7 @@ module.exports = (req, res) => {
 
         console.log("Output",text);
         text = bleep.uncensor_line(text);
+        text = text.replace("&", "&amp;");
         if (text.indexOf("/>") > 0 || text.indexOf("</")) {
             outputSpeech.type = 'SSML';
             outputSpeech.ssml = "<speak>" + text + "</speak>";

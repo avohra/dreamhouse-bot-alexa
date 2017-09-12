@@ -16,9 +16,9 @@ let getValue = (slot) => {
 let verbalizeOpportunites = (opps, assignedTo) => { 
     var text = "";
     opps.forEach(opp => {
-        text += `For Customer ${opp.get("account").Name.replace("&", "&amp;")}, there is an opportunity worth $${opp.get("amount")}`
+        text += `For Customer ${opp.get("account").Name}, there is an opportunity worth $${opp.get("amount")}`
         if (assignedTo)
-            text += `, assigned to ${opp.get("owner").Name.replace("&", "&amp;")},`;
+            text += `, assigned to ${opp.get("owner").Name},`;
         text +=` expiring on ${opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c")}, . <break time="0.5s" />`;
     });
     return text;
@@ -170,10 +170,10 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 alias: 'employee'
             }, 
             periodStartDate: {
-                lte: '2016-01-06'
+                lte: 'TODAY'
             },
             periodEndDate: {
-                gte: '2016-01-06'
+                gte: 'TODAY'
             }
         }).then(targets => {
         if (targets && targets.length) {
@@ -252,10 +252,10 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
     // TODO: Revert dayInRange back to TODAY
     salesforce.aggregateTargets({ 
             periodStartDate: {
-                lte: '2016-01-06'
+                lte: 'TODAY'
             },
             periodEndDate: {
-                gte: '2016-01-06'
+                gte: 'TODAY'
             }
         })
         .then(results => {
@@ -278,7 +278,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                             let weeklyClosed = closedResult.get('totalamount');
                             // TODO: Replace the period name with current one
                             console.log('findWeeklyClosed result: ' + JSON.stringify(closedResult));
-                            salesforce.aggregateTargets({ period: '2016-Q1' })
+                            salesforce.aggregateTargets({ period: SF_CURRENT_PERIOD })
                                 .then(qtResults => {
                                     if (qtResults && qtResults.length>0) {
                                         let qtResult = qtResults[0];
