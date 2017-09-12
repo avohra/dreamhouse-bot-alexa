@@ -339,9 +339,9 @@ let RequestUpdate = (slots, session, response, dialogState) => {
 let SalesRepProgress = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
-            resolutionDate: {
-                gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
-                lte: periods[0].get('SSI_ZTH__Period_End_Date__c')
+            closeDate: {
+                gte: '2017-09-11', 
+                lte: '2017-09-17'
             },
             salesRep: SF_SALES_REP_NAME 
         };
@@ -351,17 +351,19 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 '!salesStage': ['House Account'] 
             }), 
             salesforce.aggregateOpportunities(_.extend({ 
-                salesStage: ['Closed Sale']
+                //salesStage: ['Closed Sale']
+                '!salesStage': ['House Account']
             }, params)), 
             salesforce.aggregateOpportunities(_.extend({ 
-                salesStage: ['Closed Sale', 'No Service']
+                //salesStage: ['Closed Sale', 'No Service']
+                '!salesStage': ['House Account']
             }, params)),
             salesforce.aggregateTargets(_.extend({
                 periodStartDate: {
-                    gte: params.resolutionDate.gte
+                    gte: params.closeDate.gte
                 },
                 periodEndDate: {
-                    lte: params.resolutionDate.lte
+                    lte: params.closeDate.lte
                 },
                 period: periods[0].get('Name')
             }, params))

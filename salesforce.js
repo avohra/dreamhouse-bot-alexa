@@ -147,7 +147,6 @@ let findPeriod = (params) => {
     return executeQuery(params, 'SSI_ZTH__Period__c', ['Name', 'SSI_ZTH__Period_Start_Date__c', 'SSI_ZTH__Period_End_Date__c'], where);
 }
 
-
 login();
 
 exports.org = org;
