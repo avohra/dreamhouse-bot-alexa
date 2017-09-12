@@ -340,8 +340,8 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
     salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
         let params = { 
             closeDate: {
-                gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
-                lte: periods[0].get('SSI_ZTH__Period_End_Date__c')
+                gte: '2017-09-11', 
+                lte: '2017-09-19'
             },
             salesRep: SF_SALES_REP_NAME 
         };
