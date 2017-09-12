@@ -370,12 +370,20 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                     lte: 'TODAY'
                 },
                 period: periods[0].get('Name')
+            }, params)),
+            salesforce.aggregateOpportunities(_.extend({ 
+                //salesStage: ['Closed Sale', 'No Service']
+                '!salesStage': ['House Account'],
+                closeDate: {
+                    gte: '2017-09-11',
+                    lt : '2017-09-19'
+                }
             }, params))
         ]).then(values => { 
             console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount') );
             let resRate = (values[2][0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2),
-                gap = values[3][0].get('totalAmount') - values[1][0].get('totalAmount');
+                gap = values[3][0].get('totalAmount') - values[4][0].get('totalAmount');
                 console.log(gap, values[3][0].get('totalAmount'), values[1][0].get('totalAmount'))
                 if (gap == 0)
                     response.say(`You're OK. <break time="0.5s" /> Your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both about the same as the team average.`);
