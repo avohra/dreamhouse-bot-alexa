@@ -348,7 +348,11 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
         Promise.all([
             salesforce.aggregateOpportunities({ 
                 salesRep: SF_SALES_REP_NAME,
-                '!salesStage': ['House Account'] 
+                '!salesStage': ['House Account'],
+                expirationDate: {
+                    gte: '2017-04-01',
+                    lt : '2018-01-01'
+                }
             }), 
             salesforce.aggregateOpportunities(_.extend({ 
                 //salesStage: ['Closed Sale']
