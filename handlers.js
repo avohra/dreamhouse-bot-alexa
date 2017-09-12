@@ -368,6 +368,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 period: periods[0].get('Name')
             }, params))
         ]).then(values => { 
+            console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount') );
             let resRate = (values[2][0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2),
                 gap = values[3][0].get('totalAmount') - values[1][0].get('totalAmount');

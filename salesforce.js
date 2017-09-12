@@ -119,7 +119,15 @@ let aggregateOpportunities = (params) => {
 }
 
 let aggregateTargets = (params) => {
-    console.log("Aggregate targets " + JSON.stringify(params));
+    console.log("Aggregate targets " + JSON.stringify(params));   
+    return filterTargets(params, 
+        ['Sum(SSI_ZTH__Target__c) totalAmount',
+         'Count(Name) targetCount',
+         'MIN(ssi_zth__start_date__c) minstart', 
+         'MAX(ssi_zth__end_date__c) maxend']);
+}
+
+let filterTargets = (params, select) => {
     let clause = [];
     if (params) {
         if (params.salesRep)
@@ -132,14 +140,18 @@ let aggregateTargets = (params) => {
             clause.push(getRangeClause(`SSI_ZTH__End_Date__c`, params.periodEndDate));
     }
     return executeQuery(params, 
-        'SSI_ZTH__Sales_Target_Line_Item__c', 
-        ['Sum(SSI_ZTH__Target__c) totalAmount',
-         'Count(Name) targetCount',
-         'MIN(ssi_zth__start_date__c) minstart', 
-         'MAX(ssi_zth__end_date__c) maxend'], clause);
+        'SSI_ZTH__Sales_Target_Line_Item__c', select, clause);
 }
 
 let findPeriod = (params) => {
+    console.log("find period " + JSON.stringify(params));
+    var where = []; 
+    if (params && params.period)
+        where.push(`Name = '${params.period}'`)
+    return executeQuery(params, 'SSI_ZTH__Period__c', ['Name', 'SSI_ZTH__Period_Start_Date__c', 'SSI_ZTH__Period_End_Date__c'], where);
+}
+
+let findPeriodLineItem = (params) => {
     console.log("find period " + JSON.stringify(params));
     var where = []; 
     if (params && params.period)
