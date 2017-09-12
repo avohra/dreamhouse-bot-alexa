@@ -354,15 +354,15 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                     lt : '2018-01-01'
                 }
             }), 
-            salesforce.aggregateOpportunities(_.extend({ 
+            salesforce.aggregateOpportunities(_.default({ 
                 //salesStage: ['Closed Sale']
                 '!salesStage': ['House Account']
             }, params)), 
-            salesforce.aggregateOpportunities(_.extend({ 
+            salesforce.aggregateOpportunities(_.default({ 
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account']
             }, params)),
-            salesforce.aggregateTargets(_.extend({
+            salesforce.aggregateTargets(_.default({
                 periodStartDate: {
                     gte: 'TODAY'
                 },
@@ -371,7 +371,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 },
                 period: periods[0].get('Name')
             }, params)),
-            salesforce.aggregateOpportunities(_.extend({ 
+            salesforce.aggregateOpportunities(_.default({ 
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account'],
                 closeDate: {
