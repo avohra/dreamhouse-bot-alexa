@@ -152,12 +152,11 @@ let ImproveResRate = (slots, session, response, dialogState) => {
                 lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
             }, 
             salesRep: SF_SALES_REP_NAME,
-            salesStage: ['Not Contacted'],
-            limit: 3
+            salesStage: ['Not Contacted']
         };
         salesforce.aggregateOpportunities(params).then(stats => {
             if (stats[0].get('oppCount') > 0)
-                response.say(`You have ${stats[0].get('oppCount')} carryover ${stats[0].get('oppCount') > 0 ? "opportunities" : "opportunity"} in the Not Contacted sales stage which represent $${Math.round(stats[0].get('totalTargetAmount'))} of target amount. Resolving the largest of these would be a good start`);
+                response.say(`You have ${stats[0].get('oppCount')} carryover ${stats[0].get('oppCount') > 1 ? "opportunities" : "opportunity"} in the Not Contacted sales stage which represent $${Math.round(stats[0].get('totalTargetAmount'))} of target amount. Resolving the largest of these would be a good start`);
             else
                 response.say(`Sorry <break time="0.5s" /> you're screwed asshole`);
         });
