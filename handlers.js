@@ -376,7 +376,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 '!salesStage': ['House Account'],
                 closeDate: {
                     gte: '2017-09-11',
-                    lt : '2017-09-19'
+                    lt : '2017-09-17'
                 }
             }, params))
         ]).then(values => { 
