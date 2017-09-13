@@ -413,7 +413,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
     });
 }
 let WhatShouldIDo = (slots, session, response, dialogState) => {
-    response.say("Stop screwing around and just fucking call the end user!");
+    response.say("Stop screwing around and just call the end user!");
 }
 
 let LongRamble = (slots, session, response, dialogState) => {
