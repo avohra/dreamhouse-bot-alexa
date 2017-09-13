@@ -356,22 +356,25 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             salesRep: SF_SALES_REP_NAME 
         };
         Promise.all([
-            salesforce.aggregateOpportunities({ 
-                salesRep: SF_SALES_REP_NAME,
+            // Available Opportunity
+            salesforce.aggregateOpportunities(_.defaults({
                 '!salesStage': ['House Account'],
                 closeDate: {
                     gte: '2017-04-01',
                     lt : '2018-01-01'
                 }
-            }), 
+            }, params)), 
+            // Closed
             salesforce.aggregateOpportunities(_.defaults({ 
                 //salesStage: ['Closed Sale']
                 '!salesStage': ['House Account']
-            }, params)), 
+            }, params)),
+            // Resolved 
             salesforce.aggregateOpportunities(_.defaults({ 
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account']
             }, params)),
+            // Closed this week
             salesforce.aggregateOpportunities(_.defaults({ 
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account'],
@@ -384,7 +387,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             let resRate = (resolvedQtr[0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (closedQtr[0].get('totalAmount')/resolvedQtr[0].get('totalTargetAmount')*100).toFixed(2),
                 gap = targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount');  
-                console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount') ,"Closed Amount For Week: ",values[4][0].get('totalAmount') );
+                console.log("Resolution Amount: ", resolvedQtr[0].get('totalTargetAmount'), "Available Opportunity: ", availableQtr[0].get('totalTargetAmount'), "Closed Amount: ", closedQtr[0].get('totalAmount') ,"Closed Amount For Week: ", closedWeek[0].get('totalAmount') );
 
                 if (gap == 0)
                     response.say(`You're OK. <break time="0.5s" /> Your resolution rate of ${resRate}% and conversion rate of ${convRate}% are both about the same as the team average.`);
