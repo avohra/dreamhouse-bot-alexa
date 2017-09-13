@@ -337,7 +337,17 @@ let RequestUpdate = (slots, session, response, dialogState) => {
     });    
 }
 let SalesRepProgress = (slots, session, response, dialogState) => {
-    salesforce.findPeriod({ period: SF_CURRENT_PERIOD }).then(periods=> {
+    Promise.all([
+        salesforce.findPeriod({ period: SF_CURRENT_PERIOD }),
+        salesforce.aggregateTargets({
+            periodStartDate: {
+                lte: 'TODAY'
+            },
+            periodEndDate: {
+                gte: 'TODAY'
+            }
+        })
+    ]).then( (period, targetsWeek) => {
         let params = { 
             closeDate: {
                 gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
@@ -362,28 +372,18 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account']
             }, params)),
-            salesforce.aggregateTargets(_.defaults({
-                periodStartDate: {
-                    lte: 'TODAY'
-                },
-                periodEndDate: {
-                    gte: 'TODAY'
-                },
-                period: periods[0].get('Name')
-            }, params)),
             salesforce.aggregateOpportunities(_.defaults({ 
                 //salesStage: ['Closed Sale', 'No Service']
                 '!salesStage': ['House Account'],
                 closeDate: {
-                    gte: '2017-09-11',
-                    lt : '2017-09-17'
+                    gte: targetsWeek[0].get('minstart'),
+                    lte : targetsWeek[0].get('minend')
                 }
             }, params))
-        ]).then( (availableQtr, closedQtr, resolvedQtr, targetsWeek, closedWeek) => { 
+        ]).then((availableQtr, closedQtr, resolvedQtr, closedWeek) => { 
             let resRate = (resolvedQtr[0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (closedQtr[0].get('totalAmount')/resolvedQtr[0].get('totalTargetAmount')*100).toFixed(2),
-                gap = targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount');
-                
+                gap = targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount');  
                 console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount') ,"Closed Amount For Week: ",values[4][0].get('totalAmount') );
 
                 if (gap == 0)
@@ -397,7 +397,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 console.error(err);
                 response.say("Oops. Something went wrong");
             });     
-    });    
+    });
 }
 let WhatShouldIDo = (slots, session, response, dialogState) => {
     response.say("Stop screwing around and just fucking call the end user!");
