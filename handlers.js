@@ -364,10 +364,10 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             }, params)),
             salesforce.aggregateTargets(_.defaults({
                 periodStartDate: {
-                    gte: 'TODAY'
+                    lte: 'TODAY'
                 },
                 periodEndDate: {
-                    lte: 'TODAY'
+                    gte: 'TODAY'
                 },
                 period: periods[0].get('Name')
             }, params)),
