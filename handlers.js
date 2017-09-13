@@ -339,14 +339,15 @@ let RequestUpdate = (slots, session, response, dialogState) => {
 }
 let SalesRepProgress = (slots, session, response, dialogState) => {
     Promise.all([
-        salesforce.findPeriod({ period: SF_CURRENT_PERIOD }),
+        salesforce.findPeriod({ period: SF_CURRENT_PERIOD, salesRep: SF_SALES_REP_NAME }),
         salesforce.aggregateTargets({
             periodStartDate: {
                 lte: 'TODAY'
             },
             periodEndDate: {
                 gte: 'TODAY'
-            }
+            },
+            salesRep: SF_SALES_REP_NAME
         })
     ]).then((periods, targetsWeek) => {
         console.log(periods);
