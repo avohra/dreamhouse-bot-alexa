@@ -347,7 +347,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                 gte: 'TODAY'
             }
         })
-    ]).then( (period, targetsWeek) => {
+    ]).then( (periods, targetsWeek) => {
         let params = { 
             closeDate: {
                 gte: periods[0].get('SSI_ZTH__Period_Start_Date__c'), 
