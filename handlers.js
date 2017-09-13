@@ -205,8 +205,8 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 closeDate: {
                     gte: minstart, 
                     lte: maxend
-                },
-                salesStage: ['Closed Sale']
+                }//,
+                //salesStage: ['Closed Sale']
             }).then(results => {
                 let maxGap = 0,
                     laggard = null;
