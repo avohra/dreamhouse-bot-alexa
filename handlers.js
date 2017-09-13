@@ -16,7 +16,7 @@ let getValue = (slot) => {
 let verbalizeOpportunites = (opps, assignedTo) => { 
     var text = "";
     opps.forEach(opp => {
-        text += `For Customer ${opp.get("account").Name}, there is an opportunity worth $${opp.get("amount")}`
+        text += `For Customer ${opp.get("account").Name}, there is an opportunity worth $${Math.round(opp.get("amount"))}`
         if (assignedTo)
             text += `, assigned to ${opp.get("owner").Name},`;
         text +=` expiring on ${opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c")}, . <break time="0.5s" />`;
@@ -69,7 +69,7 @@ let CountDeals = (slots, session, response, dialogState) => {
              } else if (!isNaN(params.amount.gte)) {
                 text += ` above and inclusive of $${params.amount.gte}`;
              }
-             text += `, <break time="0.5s" /> totaling $${result.get('totalAmount')}, <break time="0.5s" /> assigned to ${result.get('repCount')} reps.`;
+             text += `, <break time="0.5s" /> totaling $${Math.round(result.get('totalAmount'))}, <break time="0.5s" /> assigned to ${result.get('repCount')} reps.`;
              response.say(text);
          } else {
              response.say(`Sorry, I didn't find any open deals`);
@@ -151,11 +151,12 @@ let ImproveResRate = (slots, session, response, dialogState) => {
                 lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
             }, 
             salesRep: SF_SALES_REP_NAME,
-            salesStage: ['Not Contacted']
+            salesStage: ['Not Contacted'],
+            limit: 3
         };
         salesforce.aggregateOpportunities(params).then(stats => {
             if (stats[0].get('oppCount') > 0)
-                response.say(`You have ${stats[0].get('oppCount')} carryover ${stats[0].get('oppCount') > 0 ? "opportunities" : "opportunity"} in the Not Contacted sales stage which represent $${stats[0].get('totalTargetAmount')} of target amount. Resolving the largest of these would be a good start`);
+                response.say(`You have ${stats[0].get('oppCount')} carryover ${stats[0].get('oppCount') > 0 ? "opportunities" : "opportunity"} in the Not Contacted sales stage which represent $${Math.round(stats[0].get('totalTargetAmount'))} of target amount. Resolving the largest of these would be a good start`);
             else
                 response.say(`Sorry <break time="0.5s" /> you're screwed asshole`);
         });
@@ -237,7 +238,7 @@ let LaggardRep= (slots, session, response, dialogState) => {
                         }
                     }
                 });
-                response.say(`${laggard} is the furthest from target this week at $${maxGap} below`);
+                response.say(`${laggard} is the furthest from target this week at $${Math.round(maxGap)} below`);
             });
         }
         else
@@ -300,7 +301,7 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                     let weeklyMiss = weeklyTarget - weeklyClosed;
                                                     let quarterlyMiss = quarterlyTarget - quarterlyClosed;
                                                     let text = 'For this week of the quarter, the team is ';
-                                                    text += ` $${weeklyMiss.toFixed(2)} off of the pace and $${quarterlyMiss.toFixed(2)} `;
+                                                    text += ` $${Math.round(weeklyMiss))} off of the pace and $${Math.round(quarterlyMiss)} `;
                                                     text += ' below the end of quarter target';
                                                     console.log('findQuarterlyClosed result: ' + JSON.stringify(qcResult));
                                                     response.say(text);
@@ -386,7 +387,7 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
         ]).then((availableQtr, closedQtr, resolvedQtr, closedWeek) => { 
             let resRate = (resolvedQtr[0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (closedQtr[0].get('totalAmount')/resolvedQtr[0].get('totalTargetAmount')*100).toFixed(2),
-                gap = targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount');  
+                gap = Math.round(targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount'));  
                 console.log("Resolution Amount: ", resolvedQtr[0].get('totalTargetAmount'), "Available Opportunity: ", availableQtr[0].get('totalTargetAmount'), "Closed Amount: ", closedQtr[0].get('totalAmount') ,"Closed Amount For Week: ", closedWeek[0].get('totalAmount') );
 
                 if (gap == 0)
