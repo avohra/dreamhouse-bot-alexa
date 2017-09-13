@@ -3,7 +3,8 @@
 let salesforce = require("./salesforce"),
     _ = require("underscore"),
     SF_SALES_REP_NAME = process.env.SF_SALES_REP_NAME,
-    SF_CURRENT_PERIOD = process.env.SF_CURRENT_PERIOD_NAME;
+    SF_CURRENT_PERIOD = process.env.SF_CURRENT_PERIOD_NAME,
+    TODAY = process.env.SF_TODAY;
 
 let getValue = (slot) => {
     if (slot.resolutions) {
@@ -19,7 +20,14 @@ let verbalizeOpportunites = (opps, assignedTo) => {
         text += `For Customer ${opp.get("account").Name}, there is an opportunity worth $${Math.round(opp.get("amount"))}`
         if (assignedTo)
             text += `, assigned to ${opp.get("owner").Name},`;
-        text +=` expiring on ${opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c")}, . <break time="0.5s" />`;
+
+        var today = new Date(TODAY),
+            date = new Date(opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c"));
+        if (date && date.getTime() >= today.getTime())
+            text +=` expiring `
+        else
+            text += ` expired `;
+        text += `on ${opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c")}, . <break time="0.5s" />`;
     });
     return text;
 }
@@ -171,10 +179,10 @@ let LaggardRep= (slots, session, response, dialogState) => {
                 alias: 'employee'
             }, 
             periodStartDate: {
-                lte: 'TODAY'
+                lte: TODAY
             },
             periodEndDate: {
-                gte: 'TODAY'
+                gte: TODAY
             }
         }).then(targets => {
         if (targets && targets.length) {
@@ -253,10 +261,10 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
     // TODO: Revert dayInRange back to TODAY
     salesforce.aggregateTargets({ 
             periodStartDate: {
-                lte: 'TODAY'
+                lte: TODAY
             },
             periodEndDate: {
-                gte: 'TODAY'
+                gte: TODAY
             }
         })
         .then(results => {
@@ -342,10 +350,10 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
         salesforce.findPeriod({ period: SF_CURRENT_PERIOD, salesRep: SF_SALES_REP_NAME }),
         salesforce.aggregateTargets({
             periodStartDate: {
-                lte: 'TODAY'
+                lte: TODAY
             },
             periodEndDate: {
-                gte: 'TODAY'
+                gte: TODAY
             },
             salesRep: SF_SALES_REP_NAME
         })
