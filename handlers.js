@@ -379,10 +379,10 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                     lt : '2017-09-17'
                 }
             }, params))
-        ]).then(values => { 
-            let resRate = (values[2][0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
-                convRate = (values[1][0].get('totalAmount')/values[1][0].get('totalTargetAmount')*100).toFixed(2),
-                gap = values[3][0].get('totalAmount') - values[4][0].get('totalAmount');
+        ]).then( (availableQtr, closedQtr, resolvedQtr, targetsWeek, closedWeek) => { 
+            let resRate = (resolvedQtr[0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
+                convRate = (closedQtr[0].get('totalAmount')/resolvedQtr[0].get('totalTargetAmount')*100).toFixed(2),
+                gap = targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount');
                 
                 console.log("Resolution Amount: ", values[2][0].get('totalTargetAmount'), "Available Opportunity: ", values[0][0].get('totalTargetAmount'),"Closed Amount: ",values[1][0].get('totalAmount') ,"Closed Amount For Week: ",values[4][0].get('totalAmount') );
 
