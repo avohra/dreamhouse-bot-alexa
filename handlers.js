@@ -131,7 +131,8 @@ let ImproveConvRate = (slots, session, response, dialogState) => {
             },
             expirationDate: {
                 lt: periods[0].get('SSI_ZTH__Period_Start_Date__c')
-            }
+            },
+            limit: 3
         };
         salesforce.findOpportunities(params).then(opps => {
             if (opps && opps.length) {
