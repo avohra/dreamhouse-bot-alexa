@@ -298,10 +298,10 @@ let QuarterlyProgress = (slots, session, response, dialogState) => {
                                                 if (qcResults && qcResults.length>0) {
                                                     let qcResult = qcResults[0];
                                                     let quarterlyClosed = qcResult.get('totalamount');
-                                                    let weeklyMiss = weeklyTarget - weeklyClosed;
-                                                    let quarterlyMiss = quarterlyTarget - quarterlyClosed;
+                                                    let weeklyMiss = Math.round(weeklyTarget - weeklyClosed);
+                                                    let quarterlyMiss = Math.round(quarterlyTarget - quarterlyClosed);
                                                     let text = 'For this week of the quarter, the team is ';
-                                                    text += ` $${Math.round(weeklyMiss))} off of the pace and $${Math.round(quarterlyMiss)} `;
+                                                    text += ` $${weeklyMiss} off of the pace and $${quarterlyMiss} `;
                                                     text += ' below the end of quarter target';
                                                     console.log('findQuarterlyClosed result: ' + JSON.stringify(qcResult));
                                                     response.say(text);
