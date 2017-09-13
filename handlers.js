@@ -349,7 +349,9 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
             },
             salesRep: SF_SALES_REP_NAME
         })
-    ]).then((periods, targetsWeek) => {
+    ]).then(values => {
+        let periods = values[0], 
+            targetsWeek = values[1];
         console.log(periods);
         let params = { 
             closeDate: {
@@ -386,8 +388,12 @@ let SalesRepProgress = (slots, session, response, dialogState) => {
                     lte : targetsWeek[0].get('minend')
                 }
             }, params))
-        ]).then((availableQtr, closedQtr, resolvedQtr, closedWeek) => { 
-            let resRate = (resolvedQtr[0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
+        ]).then(values => { 
+            let availableQtr = values[0], 
+                closedQtr = values[1],
+                resolvedQtr = values[2], 
+                closedWeek = values[3],
+                resRate = (resolvedQtr[0].get('totalTargetAmount')/values[0][0].get('totalTargetAmount')*100).toFixed(2),
                 convRate = (closedQtr[0].get('totalAmount')/resolvedQtr[0].get('totalTargetAmount')*100).toFixed(2),
                 gap = Math.round(targetsWeek[0].get('totalAmount') - closedWeek[0].get('totalAmount'));  
                 console.log("Resolution Amount: ", resolvedQtr[0].get('totalTargetAmount'), "Available Opportunity: ", availableQtr[0].get('totalTargetAmount'), "Closed Amount: ", closedQtr[0].get('totalAmount') ,"Closed Amount For Week: ", closedWeek[0].get('totalAmount') );
