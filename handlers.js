@@ -26,7 +26,7 @@ let verbalizeOpportunites = (opps, assignedTo) => {
         if (date && date.getTime() >= today.getTime())
             text +=` expiring `
         else
-            text += ` expired `;
+            text += ` that expired `;
         text += `on ${opp.get("ServiceSource1__REN_Earliest_Expiration_Date__c")}, . <break time="0.5s" />`;
     });
     return text;
